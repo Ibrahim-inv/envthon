@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بصيرة | مساعد القرار التمويلي الذكي لصندوق البيئة السعودي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Amiri:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style id="MAIN_STYLES">:root{
+  --bg-deep:#06101f;
+  --bg:#0a1929;
+  --bg-2:#0f2847;
+  --bg-3:#15355c;
+  --line:#1e3a5f;
+  --line-2:#2a4a73;
+  --ink:#e8eef7;
+  --ink-2:#a8b8cc;
+  --ink-3:#6b7d96;
+  --gold:#d4af37;
+  --gold-2:#f4cf57;
+  --gold-soft:rgba(212,175,55,.12);
+  --green:#10b981;
+  --green-2:#34d399;
+  --green-soft:rgba(16,185,129,.12);
+  --red:#ef4444;
+  --orange:#f59e0b;
+  --blue:#3b82f6;
+  --shadow-1:0 1px 0 rgba(255,255,255,.04) inset, 0 8px 24px rgba(0,0,0,.3);
+  --shadow-2:0 1px 0 rgba(255,255,255,.06) inset, 0 18px 48px rgba(0,0,0,.45);
+  --font-display:"Amiri","Tajawal",serif;
+  --font-body:"Tajawal",system-ui,sans-serif;
+  --font-mono:"JetBrains Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg-deep);color:var(--ink);font-family:var(--font-body);font-size:14.5px;line-height:1.65;overflow:hidden}
+body{background:radial-gradient(1200px 600px at 80% -10%,rgba(212,175,55,.07),transparent 60%),radial-gradient(1000px 500px at 0% 110%,rgba(16,185,129,.06),transparent 60%),linear-gradient(180deg,#06101f 0%,#0a1929 100%)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.5;mix-blend-mode:overlay}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--line-2)}
+
+.shell{position:relative;z-index:1;display:grid;grid-template-columns:260px 1fr;grid-template-rows:56px 1fr 28px;height:100vh;width:100vw}
+.topbar{grid-column:1/-1;grid-row:1;display:flex;align-items:center;gap:18px;padding:0 22px;background:linear-gradient(180deg,rgba(15,40,71,.85),rgba(10,25,41,.85));backdrop-filter:blur(12px);border-bottom:1px solid var(--line);position:relative}
+.topbar::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--gold) 30%,var(--gold) 70%,transparent);opacity:.5}
+.brand{display:flex;align-items:center;gap:12px;cursor:pointer}
+.brand-mark{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#0f2847,#15355c);border:1px solid var(--gold);display:grid;place-items:center;box-shadow:0 0 24px rgba(212,175,55,.18) inset;position:relative}
+.brand-mark::before{content:"";position:absolute;inset:3px;border:1px solid rgba(212,175,55,.3);border-radius:5px}
+.brand-mark svg{width:20px;height:20px;color:var(--gold)}
+.brand-text{display:flex;flex-direction:column;line-height:1.1}
+.brand-text .ar{font-family:var(--font-display);font-weight:700;font-size:20px;color:var(--gold)}
+.brand-text .en{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.18em;color:var(--ink-3);text-transform:uppercase}
+.topbar-divider{width:1px;height:24px;background:var(--line)}
+.topbar-context{display:flex;flex-direction:column;line-height:1.2}
+.topbar-context .label{font-size:10px;color:var(--ink-3);letter-spacing:.05em}
+.topbar-context .value{font-size:13px;font-weight:500;color:var(--ink)}
+.topbar-context .value b{color:var(--gold-2);font-weight:700}
+.topbar-spacer{flex:1}
+.live-badge{display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:20px}
+.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 0 0 rgba(16,185,129,.6);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.6)}70%{box-shadow:0 0 0 10px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+.live-badge span{font-size:11.5px;color:var(--green-2);font-weight:500}
+.topbar-meta{display:flex;align-items:center;gap:10px;padding:6px 14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:8px}
+.topbar-meta .small{font-size:10px;color:var(--ink-3);letter-spacing:.05em}
+.topbar-meta .strong{font-size:12px;color:var(--ink);font-weight:600;font-family:var(--font-mono)}
+
+.sidebar{grid-column:1;grid-row:2;background:linear-gradient(180deg,rgba(15,40,71,.7),rgba(10,25,41,.7));border-left:1px solid var(--line);overflow-y:auto;padding:18px 0}
+.sidenav-header{padding:0 22px 12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.sidenav-header .title{font-size:10px;letter-spacing:.18em;color:var(--ink-3);text-transform:uppercase}
+.sidenav-header .subtitle{font-size:13px;color:var(--ink-2);margin-top:2px}
+.nav-list{list-style:none;display:flex;flex-direction:column;gap:2px;padding:0 10px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;color:var(--ink-2);font-size:13.5px;font-weight:500;border:1px solid transparent;position:relative;transition:all .2s ease}
+.nav-item:hover{background:rgba(255,255,255,.03);color:var(--ink)}
+.nav-item.active{background:linear-gradient(90deg,rgba(212,175,55,.15),transparent);color:var(--gold-2);border-color:rgba(212,175,55,.25)}
+.nav-item.active::before{content:"";position:absolute;right:-10px;top:8px;bottom:8px;width:3px;background:var(--gold);border-radius:2px}
+.nav-icon{width:18px;height:18px;display:grid;place-items:center;color:currentColor;flex-shrink:0}
+.nav-icon svg{width:18px;height:18px}
+.nav-num{margin-right:auto;font-family:var(--font-mono);font-size:10px;color:var(--ink-3);font-weight:400}
+.nav-item.active .nav-num{color:var(--gold)}
+.sidenav-footer{margin-top:24px;padding:14px 22px;border-top:1px solid var(--line)}
+.sidenav-footer .quote{font-family:var(--font-display);font-size:13px;color:var(--gold-2);line-height:1.7;font-style:italic}
+.sidenav-footer .quote-source{font-size:10.5px;color:var(--ink-3);margin-top:4px;letter-spacing:.04em}
+
+.main{grid-column:2;grid-row:2;overflow-y:auto;overflow-x:hidden;position:relative}
+.view{display:block;padding:24px 32px 60px;animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.view-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:24px;position:relative}
+.view-head::after{content:"";position:absolute;right:0;bottom:-1px;width:80px;height:2px;background:var(--gold)}
+.view-head .left h1{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--ink);line-height:1.2}
+.view-head .left .crumb{font-size:11px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;margin-bottom:6px}
+.view-head .left .desc{font-size:13.5px;color:var(--ink-2);margin-top:6px;max-width:680px;line-height:1.7}
+.view-head .right{display:flex;flex-direction:column;align-items:flex-start;gap:6px;flex-shrink:0}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;font-size:10.5px;font-family:var(--font-mono);background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.3);color:var(--gold-2);border-radius:14px;letter-spacing:.05em}
+.tag.green{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:var(--green-2)}
+.tag.blue{background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3);color:#7eb1ff}
+
+.hero{display:grid;grid-template-columns:1.3fr .9fr;gap:32px;align-items:start}
+.hero-left{padding:8px 0}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:18px}
+.hero-eyebrow::before{content:"";width:30px;height:1px;background:var(--gold)}
+.hero h1{font-family:var(--font-display);font-size:60px;line-height:1.05;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+.hero h1 .gold{color:var(--gold);background:linear-gradient(180deg,var(--gold-2),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero .lead{font-size:16px;color:var(--ink-2);line-height:1.85;margin:18px 0 26px;max-width:560px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+.stat{padding:14px 16px;background:linear-gradient(180deg,rgba(15,40,71,.6),rgba(10,25,41,.6));border:1px solid var(--line);border-radius:10px;position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;top:0;right:0;width:24px;height:1px;background:var(--gold)}
+.stat .num{font-family:var(--font-mono);font-size:24px;font-weight:700;color:var(--gold-2);line-height:1.1}
+.stat .lbl{font-size:11px;color:var(--ink-3);margin-top:6px;letter-spacing:.04em;line-height:1.4}
+.hero-cta{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;font-family:var(--font-body);font-size:14px;font-weight:500;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink);transition:all .2s ease}
+.btn:hover{border-color:var(--line-2);background:rgba(255,255,255,.06)}
+.btn.primary{background:linear-gradient(180deg,var(--gold-2),var(--gold));color:#0a1929;border-color:var(--gold);font-weight:700;box-shadow:0 8px 24px rgba(212,175,55,.2)}
+.btn.primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn svg{width:16px;height:16px}
+
+.hero-right{position:relative;padding:24px;background:linear-gradient(180deg,rgba(15,40,71,.6),rgba(10,25,41,.4));border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-2)}
+.hero-right::before{content:"";position:absolute;top:-1px;right:24px;left:24px;height:1px;background:linear-gradient(90deg,transparent,var(--gold) 30%,var(--gold) 70%,transparent)}
+.spotlight-title{font-size:11px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+.spotlight-box{padding:16px;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:10px;margin-bottom:12px}
+.spotlight-region{font-family:var(--font-display);font-size:22px;color:var(--ink);font-weight:700}
+.spotlight-meta{display:flex;gap:16px;margin-top:10px;font-size:11.5px;color:var(--ink-3);flex-wrap:wrap}
+.spotlight-meta b{color:var(--ink);font-weight:600}
+.spotlight-bar{margin-top:14px}
+.spotlight-bar .lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-2);margin-bottom:6px}
+.spotlight-bar .lbl b{color:var(--green-2);font-family:var(--font-mono)}
+.spotlight-bar .track{height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden}
+.spotlight-bar .fill{height:100%;background:linear-gradient(90deg,var(--green),var(--green-2));border-radius:3px;animation:fillBar 1.4s ease forwards}
+@keyframes fillBar{from{width:0}}
+.spotlight-actions{display:flex;gap:8px;margin-top:14px}
+.mini-btn{flex:1;padding:8px;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.25);color:var(--gold-2);border-radius:6px;font-size:11.5px;cursor:pointer;font-family:var(--font-body)}
+.mini-btn:hover{background:rgba(212,175,55,.15)}
+
+.context-strip{margin-top:36px;padding:18px 22px;background:linear-gradient(180deg,rgba(15,40,71,.4),rgba(10,25,41,.4));border:1px solid var(--line);border-radius:12px;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center}
+.context-strip .ico{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(212,175,55,.05));border:1px solid rgba(212,175,55,.3);display:grid;place-items:center}
+.context-strip .ico svg{width:24px;height:24px;color:var(--gold-2)}
+.context-strip .text h4{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.context-strip .text p{font-size:12.5px;color:var(--ink-2);line-height:1.65}
+
+.partners{margin-top:28px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.partner{padding:14px 18px;background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;gap:4px}
+.partner .role{font-size:10px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase}
+.partner .name{font-size:13px;color:var(--ink);font-weight:600}
+.partner .name b{color:var(--gold-2)}
+
+.map-shell{display:grid;grid-template-columns:1fr 340px;gap:18px;height:calc(100vh - 56px - 28px - 130px)}
+.map-wrap{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#06101f;box-shadow:var(--shadow-2)}
+#map{position:absolute;inset:0}
+.leaflet-container{background:#0a1929 !important;font-family:var(--font-body) !important}
+.map-overlay-top{position:absolute;top:14px;right:14px;left:14px;display:flex;justify-content:space-between;gap:10px;z-index:500;pointer-events:none;flex-wrap:wrap}
+.map-controls{display:flex;flex-wrap:wrap;gap:6px;padding:6px;background:rgba(6,16,31,.85);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:10px;pointer-events:auto;max-width:75%}
+.layer-btn{padding:7px 12px;font-size:11.5px;color:var(--ink-2);background:transparent;border:1px solid transparent;border-radius:6px;cursor:pointer;font-family:var(--font-body);white-space:nowrap}
+.layer-btn:hover{color:var(--ink);background:rgba(255,255,255,.05)}
+.layer-btn.active{background:rgba(212,175,55,.15);border-color:rgba(212,175,55,.4);color:var(--gold-2)}
+.map-legend{padding:10px 14px;background:rgba(6,16,31,.85);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:10px;pointer-events:auto;min-width:180px}
+.map-legend .title{font-size:10px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase;margin-bottom:8px}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-2);margin:4px 0}
+.legend-dot{width:10px;height:10px;border-radius:50%}
+
+.map-side{display:flex;flex-direction:column;gap:14px;overflow-y:auto;padding-left:4px}
+.side-card{padding:16px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:12px}
+.side-card h4{font-size:12px;letter-spacing:.12em;color:var(--ink-3);text-transform:uppercase;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.side-card h4 .count{font-family:var(--font-mono);font-size:11px;color:var(--gold-2)}
+.region-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;border:1px solid transparent;font-size:13px}
+.region-item:hover{background:rgba(255,255,255,.04);border-color:var(--line)}
+.region-item.selected{background:rgba(212,175,55,.1);border-color:rgba(212,175,55,.3)}
+.region-item .pin{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.region-item .name{flex:1;color:var(--ink)}
+.region-item .score{font-family:var(--font-mono);font-size:11px;color:var(--ink-3)}
+
+.detail-card{padding:18px;background:linear-gradient(180deg,rgba(212,175,55,.08),rgba(15,40,71,.5));border:1px solid rgba(212,175,55,.25);border-radius:12px;flex-shrink:0}
+.detail-card h3{font-family:var(--font-display);font-size:20px;color:var(--gold-2);font-weight:700;margin-bottom:6px}
+.detail-card .small{font-size:11px;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase}
+.detail-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.detail-stat{padding:10px;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:8px}
+.detail-stat .v{font-family:var(--font-mono);font-size:18px;color:var(--ink);font-weight:700}
+.detail-stat .l{font-size:10px;color:var(--ink-3);margin-top:2px}
+
+.agents-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;margin-top:8px}
+.agents-stage{position:relative;height:520px;background:radial-gradient(circle at center,rgba(15,40,71,.6),rgba(6,16,31,.8));border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.agents-stage::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(212,175,55,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(212,175,55,.04) 1px,transparent 1px);background-size:40px 40px}
+.agent-node{position:absolute;width:130px;text-align:center;cursor:pointer;transition:transform .3s;z-index:2}
+.agent-node:hover{transform:scale(1.05)}
+.agent-node .icon-ring{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--bg-2),var(--bg-3));border:2px solid var(--line-2);margin:0 auto;display:grid;place-items:center;position:relative;transition:all .4s}
+.agent-node.active .icon-ring{border-color:var(--gold);box-shadow:0 0 30px rgba(212,175,55,.5),inset 0 0 20px rgba(212,175,55,.15)}
+.agent-node.active .icon-ring::before{content:"";position:absolute;inset:-6px;border:1px solid var(--gold);border-radius:50%;animation:ringPulse 1.4s ease-out infinite}
+@keyframes ringPulse{0%{transform:scale(1);opacity:1}100%{transform:scale(1.4);opacity:0}}
+.agent-node .icon-ring svg{width:32px;height:32px;color:var(--ink-2)}
+.agent-node.active .icon-ring svg{color:var(--gold-2)}
+.agent-node .label{margin-top:8px;font-size:13px;font-weight:700;color:var(--ink)}
+.agent-node .role{font-size:10.5px;color:var(--ink-3);margin-top:2px}
+.agent-node.active .label{color:var(--gold-2)}
+.agent-line{position:absolute;height:1px;background:linear-gradient(90deg,transparent,var(--line-2),transparent);transform-origin:left center;pointer-events:none;z-index:1}
+.agent-line.active{background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 8px rgba(212,175,55,.3)}
+
+.agent-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.2) 0%,rgba(212,175,55,.05) 60%,transparent 100%);display:grid;place-items:center;border:1px dashed rgba(212,175,55,.3);z-index:2}
+.agent-center .core{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--gold-2),var(--gold));display:grid;place-items:center;color:#0a1929;box-shadow:0 0 60px rgba(212,175,55,.4);animation:coreSpin 14s linear infinite}
+@keyframes coreSpin{to{transform:rotate(360deg)}}
+.agent-center .core .lbl{font-family:var(--font-display);font-weight:700;font-size:14px;line-height:1.1;text-align:center}
+.agent-center .core .lbl small{display:block;font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;font-weight:400;margin-top:2px}
+
+.agent-controls{display:flex;justify-content:center;gap:10px;margin-top:12px}
+.agent-controls .btn{font-size:13px;padding:10px 20px}
+
+.agent-feed{height:520px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column}
+.feed-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.feed-head .title{font-size:12px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;font-weight:700}
+.feed-head .stat{font-family:var(--font-mono);font-size:11px;color:var(--ink-3)}
+.feed-list{flex:1;overflow-y:auto;padding:14px}
+.feed-msg{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(255,255,255,.06);animation:msgIn .4s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.feed-msg .ts{font-family:var(--font-mono);font-size:10px;color:var(--ink-3);flex-shrink:0;width:46px}
+.feed-msg .who{font-size:11px;font-weight:700;flex-shrink:0;width:90px}
+.feed-msg .who.data{color:#7eb1ff}.feed-msg .who.gis{color:var(--green-2)}.feed-msg .who.bio{color:#f87171}.feed-msg .who.eco{color:var(--gold-2)}.feed-msg .who.sys{color:var(--ink-3)}
+.feed-msg .body{flex:1;font-size:12.5px;color:var(--ink-2);line-height:1.55}
+.feed-msg .body code{font-family:var(--font-mono);font-size:11px;color:var(--gold-2);background:rgba(212,175,55,.08);padding:1px 5px;border-radius:3px}
+
+.discoveries-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+.disc-card{padding:22px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:14px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.disc-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 14px 36px rgba(0,0,0,.4)}
+.disc-card::before{content:"";position:absolute;top:0;right:0;width:60px;height:60px;background:radial-gradient(circle at top right,rgba(212,175,55,.18),transparent 70%);pointer-events:none}
+.disc-num{font-family:var(--font-mono);font-size:11px;color:var(--gold);letter-spacing:.16em;margin-bottom:10px}
+.disc-region{font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.disc-tag{display:inline-block;padding:3px 10px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;font-size:10.5px;border-radius:12px;margin-bottom:12px}
+.disc-tag.green{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:var(--green-2)}
+.disc-tag.blue{background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3);color:#7eb1ff}
+.disc-tag.orange{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:#fbbf24}
+.disc-summary{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:14px;min-height:65px}
+.disc-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-top:14px;border-top:1px solid var(--line)}
+.disc-metric .v{font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--gold-2);line-height:1.1}
+.disc-metric .v.green{color:var(--green-2)}
+.disc-metric .l{font-size:10px;color:var(--ink-3);margin-top:3px}
+
+.dpsir-track{margin-top:22px;padding:18px;background:rgba(0,0,0,.18);border:1px dashed var(--line);border-radius:10px}
+.dpsir-track .small{font-size:10.5px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;margin-bottom:12px}
+.dpsir-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-items:stretch}
+.dpsir-step{padding:10px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:8px}
+.dpsir-step .k{font-family:var(--font-mono);font-size:10px;color:var(--gold);letter-spacing:.06em;margin-bottom:4px}
+.dpsir-step .v{font-size:12px;color:var(--ink);line-height:1.55}
+
+.detail-back{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:12px;color:var(--ink-2);background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:6px;cursor:pointer;margin-bottom:18px;font-family:var(--font-body)}
+.detail-back:hover{color:var(--ink);border-color:var(--line-2)}
+.detail-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:24px;margin-top:16px}
+.section-block{padding:20px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:12px;margin-bottom:16px}
+.section-block h3{font-family:var(--font-display);font-size:18px;color:var(--gold-2);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.section-block p{font-size:13.5px;color:var(--ink-2);line-height:1.85;margin-bottom:10px}
+.section-block ul{list-style:none;padding:0}
+.section-block li{padding:8px 0 8px 20px;position:relative;font-size:13px;color:var(--ink-2);line-height:1.7}
+.section-block li::before{content:"◆";position:absolute;right:0;color:var(--gold);font-size:9px;top:14px}
+
+.vision-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:24px}
+.vis-card{padding:18px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:12px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.vis-card:hover{transform:translateY(-2px);border-color:var(--green)}
+.vis-card .target-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.35;min-height:38px}
+.vis-card .nums{display:flex;gap:14px;margin-bottom:10px;align-items:baseline;flex-wrap:wrap}
+.vis-card .now{font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--ink)}
+.vis-card .arrow{color:var(--ink-3);font-size:12px}
+.vis-card .target{font-family:var(--font-mono);font-size:13px;color:var(--green-2);font-weight:600}
+.vis-card .progress{height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;margin:8px 0 6px}
+.vis-card .progress-fill{height:100%;border-radius:3px;animation:fillBar 1.4s ease forwards}
+.vis-card .gap{font-size:11px;color:var(--ink-3);font-family:var(--font-mono)}
+.vis-card .gap b{color:#fbbf24;margin-right:4px}
+
+.vis-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.vis-detail-grid.three{grid-template-columns:1.4fr .8fr .8fr}
+.chart-box{padding:18px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:12px;min-height:280px}
+.chart-box h4{font-size:13px;color:var(--ink-2);margin-bottom:14px;font-weight:600}
+.chart-box .canvas-wrap{height:240px;position:relative}
+
+.method-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.method-block{padding:22px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:14px;position:relative;overflow:hidden}
+.method-block::before{content:"";position:absolute;top:0;right:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--gold) 50%,transparent)}
+.method-block .num{font-family:var(--font-mono);font-size:12px;color:var(--gold);letter-spacing:.16em;margin-bottom:6px}
+.method-block h3{font-family:var(--font-display);font-size:22px;color:var(--ink);margin-bottom:6px}
+.method-block .ref{font-family:var(--font-mono);font-size:10px;color:var(--ink-3);letter-spacing:.06em;margin-bottom:14px}
+.method-block p{font-size:13px;color:var(--ink-2);line-height:1.85;margin-bottom:12px}
+.fair-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px}
+.fair-item{padding:10px 12px;background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:8px}
+.fair-item .letter{font-family:var(--font-display);font-size:24px;color:var(--gold);font-weight:700;line-height:1}
+.fair-item .word{font-size:11px;color:var(--ink-3);margin-top:2px}
+.fair-item .desc{font-size:11.5px;color:var(--ink-2);margin-top:4px;line-height:1.55}
+
+.dpsir-visual{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:14px;flex-wrap:wrap}
+.dpsir-bubble{flex:1;min-width:80px;padding:12px 8px;text-align:center;background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:10px}
+.dpsir-bubble .l{font-family:var(--font-mono);font-size:11px;color:var(--gold);letter-spacing:.08em}
+.dpsir-bubble .a{font-size:12px;color:var(--ink);font-weight:600;margin-top:4px}
+.dpsir-bubble .e{font-size:10.5px;color:var(--ink-3);margin-top:2px}
+.dpsir-arrow{color:var(--gold);font-size:18px;flex-shrink:0;align-self:center}
+
+.ecv-list{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.ecv-chip{padding:10px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.25);border-radius:8px}
+.ecv-chip .label{font-size:11.5px;color:var(--green-2);font-weight:600}
+.ecv-chip .val{font-family:var(--font-mono);font-size:10px;color:var(--ink-3);margin-top:2px}
+
+.global-models{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.gmodel{padding:14px;background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:10px}
+.gmodel .name{font-size:13px;color:var(--ink);font-weight:700}
+.gmodel .org{font-size:10.5px;color:var(--gold-2);margin-top:2px}
+.gmodel .desc{font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.65}
+
+.tech-stack-list{margin-top:14px}
+.tech-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.tech-row:last-child{border-bottom:0}
+.tech-row .layer{font-size:11px;color:var(--ink-3);width:80px;letter-spacing:.06em;flex-shrink:0}
+.tech-row .tech{font-family:var(--font-mono);font-size:12px;color:var(--ink);flex:1}
+.tech-row .tag{font-size:10px}
+
+.protect-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.protect-item{padding:12px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:8px;display:flex;gap:10px;align-items:flex-start}
+.protect-item .ico{width:30px;height:30px;border-radius:6px;background:rgba(59,130,246,.15);display:grid;place-items:center;flex-shrink:0;color:#7eb1ff}
+.protect-item .ico svg{width:14px;height:14px}
+.protect-item .text{font-size:12px;color:var(--ink-2);line-height:1.6}
+.protect-item .text b{color:var(--ink);font-weight:600}
+
+.sources-list{display:grid;grid-template-columns:1fr;gap:12px}
+.source-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:18px;align-items:center;padding:18px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:12px}
+.source-row .num{font-family:var(--font-mono);font-size:24px;color:var(--gold);font-weight:700;width:30px}
+.source-row .info .name{font-size:15px;color:var(--ink);font-weight:700}
+.source-row .info .name-en{font-family:var(--font-mono);font-size:10px;color:var(--ink-3);letter-spacing:.06em;margin-top:2px}
+.source-row .info .desc{font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.55}
+.source-row .vol{text-align:center;padding:8px 14px;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:8px}
+.source-row .vol .v{font-family:var(--font-mono);font-size:14px;color:var(--gold-2);font-weight:700}
+.source-row .vol .l{font-size:10px;color:var(--ink-3);margin-top:2px}
+.source-row .status{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.source-row .status.connected{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--green-2)}
+.source-row .status.partial{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#fbbf24}
+.source-row .status .dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+
+.sus-streams{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-bottom:30px}
+.stream-card{padding:22px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:14px;position:relative;overflow:hidden}
+.stream-card::before{content:"";position:absolute;top:0;right:0;width:80px;height:1px;background:var(--gold)}
+.stream-card .num{font-family:var(--font-mono);font-size:11px;color:var(--gold);letter-spacing:.16em;margin-bottom:8px}
+.stream-card h3{font-size:18px;color:var(--ink);margin-bottom:8px}
+.stream-card .price{font-family:var(--font-mono);font-size:22px;color:var(--green-2);font-weight:700;margin:8px 0}
+.stream-card p{font-size:12.5px;color:var(--ink-2);line-height:1.75}
+
+.roadmap{padding:24px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:14px}
+.roadmap h3{font-family:var(--font-display);font-size:20px;color:var(--gold-2);margin-bottom:18px}
+.roadmap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.roadmap-stage{padding:18px;background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:12px;position:relative}
+.roadmap-stage .yr{font-family:var(--font-mono);font-size:11px;color:var(--gold);letter-spacing:.16em;margin-bottom:8px}
+.roadmap-stage h4{font-size:15px;color:var(--ink);margin-bottom:6px}
+.roadmap-stage .rev{font-family:var(--font-mono);font-size:18px;color:var(--green-2);font-weight:700;margin-bottom:10px}
+.roadmap-stage ul{list-style:none}
+.roadmap-stage li{padding:5px 0 5px 16px;position:relative;font-size:12px;color:var(--ink-2)}
+.roadmap-stage li::before{content:"›";position:absolute;right:0;color:var(--gold);font-weight:700}
+
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:30px}
+.member-card{padding:24px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:14px;text-align:center}
+.member-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--gold-2),var(--gold));display:grid;place-items:center;margin:0 auto 14px;color:#0a1929;font-family:var(--font-display);font-size:30px;font-weight:700;box-shadow:0 0 30px rgba(212,175,55,.25)}
+.member-card .name{font-size:16px;color:var(--ink);font-weight:700;margin-bottom:4px}
+.member-card .role{font-size:12px;color:var(--gold-2);letter-spacing:.04em;margin-bottom:10px}
+.member-card .bio{font-size:12px;color:var(--ink-2);line-height:1.7}
+.member-card .badges{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.member-card .badge{padding:3px 8px;font-size:10px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;color:var(--ink-3)}
+
+.phases{padding:24px;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:14px}
+.phases h3{font-family:var(--font-display);font-size:20px;color:var(--gold-2);margin-bottom:8px}
+.phases p.lead{font-size:13px;color:var(--ink-2);margin-bottom:20px}
+.phase-track{display:flex;gap:0;align-items:stretch;position:relative}
+.phase-track::before{content:"";position:absolute;top:30px;right:30px;left:30px;height:2px;background:var(--line)}
+.phase-step{flex:1;padding:0 8px;text-align:center;position:relative;z-index:1}
+.phase-step .marker{width:60px;height:60px;border-radius:50%;background:var(--bg-2);border:2px solid var(--line);display:grid;place-items:center;margin:0 auto 14px;font-family:var(--font-mono);font-size:14px;color:var(--ink-2);font-weight:700}
+.phase-step.done .marker{background:linear-gradient(135deg,var(--green),var(--green-2));border-color:var(--green-2);color:#0a1929}
+.phase-step.active .marker{background:linear-gradient(135deg,var(--gold-2),var(--gold));border-color:var(--gold-2);color:#0a1929;box-shadow:0 0 24px rgba(212,175,55,.4)}
+.phase-step .when{font-family:var(--font-mono);font-size:10.5px;color:var(--gold);letter-spacing:.08em;margin-bottom:4px}
+.phase-step .nm{font-size:14px;color:var(--ink);font-weight:700;margin-bottom:6px}
+.phase-step .ds{font-size:11.5px;color:var(--ink-2);line-height:1.55}
+
+.chat-shell{max-width:880px;margin:0 auto;background:linear-gradient(180deg,rgba(15,40,71,.55),rgba(10,25,41,.55));border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;height:calc(100vh - 56px - 28px - 130px)}
+.chat-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.chat-head .left{display:flex;align-items:center;gap:12px}
+.chat-head .ai-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold-2),var(--gold));display:grid;place-items:center;color:#0a1929;font-weight:700;font-family:var(--font-display)}
+.chat-head .ttl{font-size:15px;color:var(--ink);font-weight:700}
+.chat-head .sub{font-size:11px;color:var(--green-2)}
+.chat-head .sub::before{content:"●";margin-left:4px}
+.chat-msgs{flex:1;overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:14px}
+.chat-msg{display:flex;gap:10px;align-items:flex-start;max-width:78%}
+.chat-msg.user{margin-right:auto;flex-direction:row-reverse}
+.chat-msg.ai{margin-left:auto}
+.chat-msg .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:11px;font-weight:700}
+.chat-msg.ai .av{background:linear-gradient(135deg,var(--gold-2),var(--gold));color:#0a1929}
+.chat-msg.user .av{background:rgba(255,255,255,.08);color:var(--ink-2);border:1px solid var(--line)}
+.chat-msg .txt{padding:10px 14px;border-radius:12px;font-size:13.5px;line-height:1.75;color:var(--ink)}
+.chat-msg.ai .txt{background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.2);border-top-right-radius:4px}
+.chat-msg.user .txt{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-top-left-radius:4px}
+.chat-msg .txt a{color:var(--gold-2);cursor:pointer;text-decoration:underline}
+.chat-suggestions{padding:10px 22px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line)}
+.suggest-chip{padding:7px 13px;font-size:11.5px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.25);color:var(--gold-2);border-radius:18px;cursor:pointer;font-family:var(--font-body)}
+.suggest-chip:hover{background:rgba(212,175,55,.15)}
+.chat-input-row{display:flex;gap:10px;padding:14px 22px;border-top:1px solid var(--line)}
+.chat-input{flex:1;padding:12px 16px;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:10px;font-family:var(--font-body);font-size:14px;color:var(--ink);outline:none}
+.chat-input:focus{border-color:var(--gold)}
+.chat-send{padding:12px 22px;background:linear-gradient(180deg,var(--gold-2),var(--gold));color:#0a1929;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:var(--font-body);font-size:14px;display:flex;align-items:center;gap:6px}
+.chat-send:hover{filter:brightness(1.1)}
+.chat-send svg{width:14px;height:14px;transform:scaleX(-1)}
+
+.statusbar{grid-column:1/-1;grid-row:3;display:flex;align-items:center;gap:18px;padding:0 22px;background:rgba(6,16,31,.7);border-top:1px solid var(--line);font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3)}
+.status-item{display:flex;align-items:center;gap:6px}
+.status-item .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.status-spacer{flex:1}
+
+@media (max-width:1100px){
+  .shell{grid-template-columns:220px 1fr}
+  .hero{grid-template-columns:1fr}
+  .hero h1{font-size:44px}
+  .map-shell{grid-template-columns:1fr;height:auto}
+  .agents-grid{grid-template-columns:1fr}
+  .vis-detail-grid,.vis-detail-grid.three{grid-template-columns:1fr}
+  .method-grid{grid-template-columns:1fr}
+  .roadmap-grid,.team-grid{grid-template-columns:1fr}
+  .partners{grid-template-columns:repeat(2,1fr)}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .dpsir-flow{grid-template-columns:1fr}
+  .sus-streams{grid-template-columns:1fr}
+  .protect-list,.fair-grid,.ecv-list{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <div class="brand" onclick="switchView('home')">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>
+    </div>
+    <div class="brand-text">
+      <div class="ar">بصيرة</div>
+      <div class="en">BASEERA · DECISION INTELLIGENCE</div>
+    </div>
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-context">
+    <div class="label">العميل المستهدف</div>
+    <div class="value">صندوق <b>البيئة السعودي</b></div>
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-context">
+    <div class="label">المسابقة</div>
+    <div class="value">هاكاثون <b>بيئة ثون 2026</b></div>
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    <span>النظام يعمل · 4 وكلاء نشطين</span>
+  </div>
+  <div class="topbar-meta">
+    <div>
+      <div class="small">حسب التوقيت</div>
+      <div class="strong" id="clock">--:--:--</div>
+    </div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <div class="sidenav-header">
+    <div class="title">المنصة</div>
+    <div class="subtitle">10 وحدات · حلّ متكامل</div>
+  </div>
+  <ul class="nav-list" id="navList"></ul>
+  <div class="sidenav-footer">
+    <div class="quote">«الاستثمار في البيئة استثمار في المستقبل»</div>
+    <div class="quote-source">— من توجهات رؤية المملكة 2030</div>
+  </div>
+</nav>
+
+<main class="main" id="main"></main>
+
+<footer class="statusbar">
+  <div class="status-item"><div class="dot"></div> 7 / 7 مصادر بيانات متصلة</div>
+  <div class="status-item"><div class="dot"></div> 4 وكلاء ذكيين فعّالين</div>
+  <div class="status-item"><div class="dot"></div> FAIR · DPSIR · جاهز للتدقيق</div>
+  <div class="status-spacer"></div>
+  <div class="status-item">EPLO Module: متصل</div>
+  <div class="status-item">v0.9-beta · بُني للهاكاثون</div>
+</footer>
+
+</div>
+
+<script id="MAIN_SCRIPT">/* ============================================================
+   BASEERA — Decision Intelligence for Saudi Environment Fund
+   ============================================================ */
+
+const REGIONS = [
+  {id:"jazan",name:"جازان",lat:16.8892,lng:42.5511,pop:1.6,scores:{air:62,water:55,waste:48,biod:75,energy:35,ghg:58,soil:60,marine:70,biorisk:88,invest:92,vision:55,climate:78}},
+  {id:"riyadh",name:"الرياض",lat:24.7136,lng:46.6753,pop:8.5,scores:{air:48,water:60,waste:65,biod:42,energy:55,ghg:40,soil:50,marine:0,biorisk:42,invest:78,vision:68,climate:55}},
+  {id:"qassim",name:"القصيم",lat:26.3260,lng:43.9750,pop:1.5,scores:{air:70,water:58,waste:38,biod:60,energy:52,ghg:62,soil:45,marine:0,biorisk:35,invest:82,vision:62,climate:48}},
+  {id:"jouf",name:"الجوف",lat:29.9697,lng:40.2064,pop:0.6,scores:{air:78,water:32,waste:55,biod:65,energy:60,ghg:70,soil:38,marine:0,biorisk:25,invest:70,vision:60,climate:45}},
+  {id:"asir",name:"عسير",lat:18.2164,lng:42.5053,pop:2.3,scores:{air:82,water:68,waste:60,biod:88,energy:48,ghg:75,soil:78,marine:0,biorisk:38,invest:75,vision:72,climate:65}},
+  {id:"makkah",name:"مكة المكرمة",lat:21.4858,lng:39.1925,pop:8.9,scores:{air:55,water:62,waste:58,biod:50,energy:50,ghg:48,soil:52,marine:65,biorisk:55,invest:72,vision:65,climate:60}},
+  {id:"madinah",name:"المدينة المنورة",lat:24.5247,lng:39.5692,pop:2.1,scores:{air:68,water:55,waste:62,biod:58,energy:52,ghg:60,soil:55,marine:62,biorisk:42,invest:68,vision:58,climate:55}},
+  {id:"eastern",name:"الشرقية",lat:26.4207,lng:50.0888,pop:5.1,scores:{air:52,water:65,waste:60,biod:48,energy:65,ghg:38,soil:45,marine:55,biorisk:48,invest:80,vision:70,climate:50}},
+  {id:"tabuk",name:"تبوك",lat:28.3835,lng:36.5662,pop:0.95,scores:{air:80,water:48,waste:62,biod:72,energy:75,ghg:78,soil:55,marine:68,biorisk:30,invest:85,vision:78,climate:62}},
+  {id:"hail",name:"حائل",lat:27.5219,lng:41.6936,pop:0.75,scores:{air:75,water:45,waste:55,biod:62,energy:55,ghg:68,soil:50,marine:0,biorisk:32,invest:65,vision:55,climate:50}},
+  {id:"najran",name:"نجران",lat:17.5658,lng:44.2289,pop:0.6,scores:{air:78,water:50,waste:48,biod:75,energy:50,ghg:72,soil:60,marine:0,biorisk:40,invest:60,vision:52,climate:60}},
+  {id:"bahah",name:"الباحة",lat:20.0129,lng:41.4677,pop:0.5,scores:{air:85,water:62,waste:55,biod:82,energy:45,ghg:78,soil:72,marine:0,biorisk:30,invest:62,vision:60,climate:68}},
+  {id:"northern",name:"الحدود الشمالية",lat:30.9753,lng:41.0381,pop:0.4,scores:{air:82,water:42,waste:50,biod:58,energy:62,ghg:75,soil:48,marine:0,biorisk:25,invest:55,vision:50,climate:48}}
+];
+
+const LAYERS = [
+  {id:"biorisk",name:"المخاطر البيولوجية",unit:"QMRA"},
+  {id:"air",name:"جودة الهواء",unit:"AQI"},
+  {id:"water",name:"جودة المياه",unit:"WQI"},
+  {id:"waste",name:"إدارة النفايات",unit:"%"},
+  {id:"biod",name:"التنوع الحيوي",unit:"BDI"},
+  {id:"energy",name:"الطاقة المتجددة",unit:"%"},
+  {id:"ghg",name:"انبعاثات الغازات",unit:"GtCO2"},
+  {id:"soil",name:"جودة التربة",unit:"SQI"},
+  {id:"marine",name:"البيئة البحرية",unit:"MBI"},
+  {id:"invest",name:"فرص الاستثمار",unit:"ROI"},
+  {id:"vision",name:"تقدم رؤية 2030",unit:"%"},
+  {id:"climate",name:"الهشاشة المناخية",unit:"CVI"}
+];
+
+const AGENTS = [
+  {id:"data",name:"وكيل البيانات",role:"جمع · توحيد · FAIR",color:"#3b82f6",angle:135,
+   capabilities:["استخلاص من 7 مصادر حكومية","التحقق من الجودة (validation)","التوحيد وفق معايير FAIR","الحفظ في قاعدة بيانات موزعة"]},
+  {id:"gis",name:"وكيل التحليل المكاني",role:"GIS · Spatial Analysis",color:"#10b981",angle:225,
+   capabilities:["تحليل الأنماط الجغرافية","كشف النقاط الساخنة (hotspots)","حساب التداخل بين الطبقات","إنشاء خرائط تنبؤية"]},
+  {id:"bio",name:"وكيل المخاطر البيولوجية",role:"QMRA · EPLO Engine",color:"#ef4444",angle:315,
+   capabilities:["محاكاة Monte Carlo (10K تكرار)","نموذج de Vos & Elbers 2024 المعدّل","تقييم الانتشار الجوي","حساب احتمال التعرض"]},
+  {id:"eco",name:"وكيل الاقتصاد",role:"ROI · Vision 2030",color:"#d4af37",angle:45,
+   capabilities:["حساب العائد على الاستثمار","مواءمة مستهدفات 2030","تقدير الخسائر المتجنبة","تحليل التكلفة-المنفعة"]}
+];
+
+const DISCOVERIES = [
+  {id:"jazan",num:"01",region:"جازان",lat:16.8892,lng:42.5511,urgency:"حرجة",urgencyClass:"",
+   title:"نقطة ساخنة وبائية في مزارع الدواجن",
+   summary:"كشف الذكاء المكاني تطابقًا بين موجات نفوق دجاج التسمين، ارتفاع تركيز الأمونيا، وتاريخ سفر طيور مهاجرة. احتمالية تفشي إنفلونزا الطيور 73%.",
+   metrics:[{v:"12 م.ر",l:"استثمار مقترح",g:false},{v:"180 م.ر",l:"خسائر متجنبة",g:true},{v:"1,400%",l:"ROI متوقع",g:true}],
+   dpsir:{d:"التوسع المكثف في مزارع الدواجن دون بنية بيئية مناسبة",p:"تركيز عالٍ من الأمونيا · كثافة طيور · هجرة موسمية",s:"تلوث جوي محلي + تدهور تربة + ضعف مناعي للقطعان",i:"خسائر اقتصادية · تهديد الأمن الغذائي · مخاطر صحة عامة",r:"منظومة مراقبة EPLO + تمويل بنى تحتية حيوية بـ12 م.ر"},
+   evidence:["معدل النفوق ارتفع 18% خلال 6 أشهر","الأمونيا تجاوزت الحد الآمن (25 ppm) في 7 من 12 مزرعة","3 موجات هجرة موسمية تمر بالقرب من المنطقة","لا يوجد نظام إنذار مبكر فعّال حاليًا"],
+   action:["تركيب 50 مستشعر IoT في مزارع المنطقة","ربط بنظام EPLO للتحليل اللحظي","تدريب 200 مربي على البروتوكولات الحيوية","تأسيس مختبر إقليمي للكشف السريع"]},
+  {id:"riyadh",num:"02",region:"الرياض",lat:24.7136,lng:46.6753,urgency:"تعارض بيانات",urgencyClass:"orange",
+   title:"تباين في تقارير انبعاثات الكربون",
+   summary:"اكتشف وكيل البيانات فجوة بين تقارير وزارة البيئة والبيانات المستخلصة من الأقمار الاصطناعية لمدينة الرياض. الفرق يصل إلى 23% في انبعاثات NOx.",
+   metrics:[{v:"3 م.ر",l:"تكلفة الحل",g:false},{v:"25 م.ر",l:"تجنب غرامات",g:true},{v:"733%",l:"ROI",g:true}],
+   dpsir:{d:"تعدد جهات القياس بدون توحيد · غياب معيار وطني موحد",p:"بلاغات متضاربة · ارتباك في القرارات التمويلية",s:"عدم دقة في تقييم التقدم نحو 2030",i:"فقدان ثقة دولية · إعاقة الاستثمار الأخضر",r:"إنشاء طبقة بيانات موحّدة عبر بصيرة + بروتوكول تحقق"},
+   evidence:["3 جهات تنشر أرقامًا مختلفة لنفس الفترة","فروقات تتراوح بين 8% و23%","القرارات التمويلية تستند لبيانات غير محدّثة","البيانات الفضائية أحدث بـ72 ساعة"],
+   action:["بروتوكول توحيد البيانات بين الجهات","لوحة تحقق آلي عبر وكيل البيانات","تقارير دورية موحّدة للجهات الدولية","تدريب الكوادر على معايير FAIR"]},
+  {id:"qassim",num:"03",region:"القصيم",lat:26.3260,lng:43.9750,urgency:"فرصة استثمار",urgencyClass:"green",
+   title:"تحويل النفايات الزراعية إلى أسمدة عضوية",
+   summary:"حلّل وكيل GIS تركّز نفايات النخيل والقمح في القصيم وحسب وكيل الاقتصاد جدوى تحويلها لأسمدة. السوق المحلي 80 م.ر/سنة بطلب صعودي.",
+   metrics:[{v:"35 م.ر",l:"استثمار مرحلي",g:false},{v:"80 م.ر",l:"سوق سنوي",g:true},{v:"3 سنوات",l:"استرداد",g:true}],
+   dpsir:{d:"التوسع الزراعي · مخلفات النخيل غير المستثمرة",p:"تراكم المخلفات · حرق غير منظم · تلوث محلي",s:"هدر مورد قابل للتدوير · إعتمادية على أسمدة مستوردة",i:"تكلفة استيراد · انبعاثات نقل · ضعف الاقتصاد الدائري",r:"تمويل 3 محطات تدوير + شراكة قطاع خاص"},
+   evidence:["180 ألف طن مخلفات سنويًا","الطلب على الأسمدة العضوية ارتفع 24%","3 مستثمرون أبدوا اهتمامًا","تقنيات التدوير ناضجة وقابلة للنقل"],
+   action:["3 محطات تدوير بسعة 60 ألف طن","شراكة مع 12 مزارع كبير","تسويق إقليمي عبر سابك للتوزيع","ربط بمنظومة الاقتصاد الدائري"]},
+  {id:"jouf",num:"04",region:"الجوف",lat:29.9697,lng:40.2064,urgency:"مخاطر مرتفعة",urgencyClass:"",
+   title:"انخفاض حاد في منسوب المياه الجوفية",
+   summary:"كشفت بيانات الأقمار + المؤسسة العامة للمياه انخفاضًا متسارعًا 2.4 م/سنة في طبقة الجوف. القطاع الزراعي مهدّد + 90 م.ر/سنة من الإنتاج معرّض للضياع.",
+   metrics:[{v:"22 م.ر",l:"استثمار حماية",g:false},{v:"90 م.ر",l:"حماية إنتاج",g:true},{v:"309%",l:"ROI",g:true}],
+   dpsir:{d:"الاعتماد على الزراعة المروية + غياب تنظيم استخراج",p:"سحب يفوق التغذية الطبيعية بـ4 أضعاف",s:"تراجع المنسوب · تملح متزايد · هبوط تربة محتمل",i:"تهديد الأمن المائي · تدهور أراضٍ زراعية · هجرة سكانية",r:"نظام إنذار مكاني + تحول لمحاصيل أقل استهلاكًا"},
+   evidence:["انخفاض 2.4 م/سنة في 5 آبار رصد","ملوحة ارتفعت من 800 إلى 1,400 ppm","الزراعة تستهلك 78% من السحب","غياب نظام رصد لحظي قبل بصيرة"],
+   action:["شبكة 80 مستشعر منسوب IoT","برنامج تحول لمحاصيل اقتصادية مياه","حظر آبار جديدة بدون دراسة","تمويل تقنيات الري بالتنقيط"]},
+  {id:"asir",num:"05",region:"عسير",lat:18.2164,lng:42.5053,urgency:"فرصة سياحية",urgencyClass:"blue",
+   title:"بنية بيئية للسياحة المستدامة",
+   summary:"حلل النظام التنوع الحيوي في عسير (BDI=88) وفرص السياحة البيئية. السوق المتوقع 70 م.ر/سنة + توافق مع رؤية 2030 السياحية.",
+   metrics:[{v:"45 م.ر",l:"بنية تحتية",g:false},{v:"70 م.ر",l:"سوق سنوي",g:true},{v:"4 سنوات",l:"استرداد",g:true}],
+   dpsir:{d:"الطلب الصاعد على السياحة الداخلية · 2030 السياحية",p:"ضغط محتمل على المحميات · غياب بنية مراقبة",s:"إمكانية تدهور أنظمة بيئية حساسة",i:"فرصة اقتصادية كبيرة + تنوع مصادر الدخل",r:"بنية سياحية بيئية + مراقبة ذكية + شراكات محلية"},
+   evidence:["BDI=88 الأعلى وطنيًا","37 نوعًا متوطنًا","الطلب على السياحة الداخلية +42% بعد 2020","لا توجد منظومة سياحة بيئية متكاملة"],
+   action:["تطوير 8 ممرات بيئية ذكية","نظام حجز رقمي ذكي مع حدود طاقة","تدريب 400 مرشد محلي","شراكة مع وزارة السياحة"]}
+];
+
+const VISION = [
+  {id:"reserves",name:"المحميات الطبيعية",current:17.2,target:30,unit:"%",color:"#10b981",
+   desc:"رفع نسبة الأراضي المحمية من 17.2% إلى 30% بحلول 2030",
+   trend:[8.5,9.8,11.2,13.0,14.5,16.0,17.2,19.5,22,25,27.5,30],
+   trendYears:["2019","2020","2021","2022","2023","2024","2025","2026","2027","2028","2029","2030"],
+   regions:[{n:"جازان",p:62},{n:"عسير",p:78},{n:"تبوك",p:55},{n:"الجوف",p:42},{n:"الباحة",p:68}],
+   progress:50.0,gapPercent:42.7,
+   investments:["تمويل 8 محميات جديدة (2.1 م.هكتار)","نظام مراقبة ذكي لـ23 محمية قائمة","شراكات مجتمعية مع 12 محافظة"]},
+  {id:"waste",name:"تحويل النفايات",current:38.5,target:94,unit:"%",color:"#f59e0b",
+   desc:"رفع نسبة تحويل النفايات من المكبات إلى 94%",
+   trend:[15,18,22,26,30,34,38.5,50,62,75,85,94],
+   trendYears:["2019","2020","2021","2022","2023","2024","2025","2026","2027","2028","2029","2030"],
+   regions:[{n:"الرياض",p:48},{n:"الشرقية",p:52},{n:"مكة",p:42},{n:"القصيم",p:38},{n:"المدينة",p:35}],
+   progress:24.6,gapPercent:55.5,
+   investments:["18 محطة تحويل (إجمالي 4.2 م.طن)","منظومة فرز مصدري في 8 مدن كبرى","سوق ثانوي للمواد المعاد تدويرها"]},
+  {id:"renewable",name:"الطاقة المتجددة",current:4.2,target:50,unit:"%",color:"#fbbf24",
+   desc:"الوصول لـ50% من الكهرباء عبر مصادر متجددة",
+   trend:[0.8,1.2,1.6,2.0,2.6,3.2,4.2,8,16,28,40,50],
+   trendYears:["2019","2020","2021","2022","2023","2024","2025","2026","2027","2028","2029","2030"],
+   regions:[{n:"تبوك",p:75},{n:"الجوف",p:60},{n:"الحدود الشمالية",p:62},{n:"الرياض",p:55},{n:"حائل",p:55}],
+   progress:8.4,gapPercent:45.8,
+   investments:["مشاريع نيوم الشمسية (4 جيجاوات)","رياح دومة الجندل (1.5 جيجاوات)","شبكة تخزين هيدروجيني"]},
+  {id:"trees",name:"زراعة الأشجار",current:159,target:600,unit:"م.شجرة",color:"#34d399",
+   desc:"زراعة 600 مليون شجرة ضمن السعودية الخضراء",
+   trend:[10,30,55,85,115,140,159,230,310,410,510,600],
+   trendYears:["2019","2020","2021","2022","2023","2024","2025","2026","2027","2028","2029","2030"],
+   regions:[{n:"عسير",p:82},{n:"الباحة",p:78},{n:"جازان",p:65},{n:"المدينة",p:55},{n:"الطائف",p:60}],
+   progress:26.5,gapPercent:73.5,
+   investments:["مشاتل وطنية بطاقة 45 م.شتلة/سنة","مبادرة السعودية الخضراء المركزية","حملات مجتمعية في 13 منطقة"]},
+  {id:"emissions",name:"خفض الانبعاثات",current:85,target:278,unit:"م.طن",color:"#ef4444",
+   desc:"خفض 278 مليون طن CO2 سنويًا بحلول 2030",
+   trend:[15,28,42,55,68,76,85,120,160,210,250,278],
+   trendYears:["2019","2020","2021","2022","2023","2024","2025","2026","2027","2028","2029","2030"],
+   regions:[{n:"الشرقية",p:62},{n:"الرياض",p:55},{n:"مكة",p:48},{n:"تبوك",p:78},{n:"جازان",p:42}],
+   progress:30.6,gapPercent:69.4,
+   investments:["مشروع احتجاز كربون الشرقية","تحول الصناعات الثقيلة (سابك + أرامكو)","كفاءة طاقة المباني الحكومية"]}
+];
+
+const SOURCES = [
+  {n:"01",name:"المركز الوطني للأرصاد",en:"NCM · National Center for Meteorology",desc:"بيانات جودة الهواء، AQI، الرياح، الرطوبة، الحرارة من 220+ محطة رصد",vol:"3.4M سجل/شهر",status:"connected"},
+  {n:"02",name:"وزارة البيئة والمياه والزراعة",en:"MEWA · Ministry of Environment",desc:"تقارير المياه الجوفية، التربة، الزراعة، الثروة الحيوانية، المحميات",vol:"180K سجل/شهر",status:"connected"},
+  {n:"03",name:"المركز الوطني للرقابة البيئية",en:"NCEC · Environmental Compliance",desc:"التزام المنشآت، الانبعاثات الصناعية، التلوث المائي والجوي",vol:"95K سجل/شهر",status:"connected"},
+  {n:"04",name:"المركز الوطني لإدارة النفايات",en:"MWAN · Waste Management Authority",desc:"كميات النفايات، نسب التدوير، المنشآت، المكبات، النقل",vol:"42K سجل/شهر",status:"connected"},
+  {n:"05",name:"المؤسسة العامة لتحلية المياه",en:"SWCC · Saline Water Conversion",desc:"إنتاج المياه، استهلاك الطاقة، جودة المياه المنتجة، البصمة الكربونية",vol:"28K سجل/شهر",status:"connected"},
+  {n:"06",name:"بيانات الأقمار الاصطناعية",en:"Sentinel · Landsat · MODIS",desc:"تغطية أرضية، حرائق، تلوث جوي، رطوبة تربة، تتبع غابات ومحميات",vol:"850 صورة/أسبوع",status:"partial"},
+  {n:"07",name:"مركز الملك فهد للأبحاث الطبية",en:"KFMRC · KAU Research",desc:"بيانات مرجعية للأمراض الحيوانية، تقارير وبائية، تحاليل مختبرية",vol:"6.8K سجل/شهر",status:"connected"}
+];
+
+const AGENT_FEED = [
+  {who:"sys",t:"00:00",b:"بدء جلسة تحليل · المنطقة المستهدفة: <code>جازان</code>"},
+  {who:"data",t:"00:01",b:"جارٍ سحب بيانات الأرصاد · 220 محطة · آخر 30 يومًا"},
+  {who:"data",t:"00:02",b:"تم استخلاص 412,300 سجل · توحيد وفق <code>FAIR</code>"},
+  {who:"gis",t:"00:03",b:"تحليل مكاني للنقاط الساخنة · معاملة Hotspot Analysis"},
+  {who:"gis",t:"00:04",b:"كشف 3 نقاط ساخنة بدلالة 99% · أكبرها مزرعة دواجن جنوب جازان"},
+  {who:"bio",t:"00:05",b:"تشغيل QMRA · نموذج <code>de Vos & Elbers 2024</code> معدّل"},
+  {who:"bio",t:"00:06",b:"محاكاة Monte Carlo · 10,000 تكرار · تشغيل GPU"},
+  {who:"bio",t:"00:07",b:"احتمال تفشي إنفلونزا الطيور: <code>73%</code> · الفترة الزمنية: 8 أسابيع"},
+  {who:"eco",t:"00:08",b:"حساب الخسائر المتوقعة · سيناريو الأساس"},
+  {who:"eco",t:"00:09",b:"خسائر متوقعة بدون تدخل: <code>180 م.ر</code>"},
+  {who:"eco",t:"00:10",b:"تكلفة التدخل المقترح: <code>12 م.ر</code> · ROI: <code>1,400%</code>"},
+  {who:"eco",t:"00:11",b:"مواءمة 2030: تأمين الغذاء + الصحة العامة + الاقتصاد الدائري"},
+  {who:"sys",t:"00:12",b:"إنتاج تقرير قرار تمويلي · جاهز للعرض"}
+];
+
+const TEAM = [
+  {av:"أ.إ",name:"إبراهيم العبدلي",role:"المؤسس والرئيس التنفيذي",bio:"طالب دكتوراه علوم بيئة · جامعة الملك عبدالعزيز · مؤسس EPLO ومدرس ثانوي بجدة",badges:["PhD Env. Sci.","Microbiology","EPLO CEO"]},
+  {av:"م.ب",name:"المهندس البرمجي",role:"كبير المطورين",bio:"خبرة في AI Agents وأنظمة GIS · LangGraph · CrewAI · Claude API · Python full-stack",badges:["AI/ML","GIS","Backend"]},
+  {av:"د.إ",name:"اقتصاديّ بيئي",role:"محلل اقتصادي",bio:"تحليل الجدوى الاقتصادية · مواءمة رؤية 2030 · حساب ROI الاجتماعي",badges:["Eco-Eco","Vision 2030","ROI"]}
+];
+
+const PHASES = [
+  {when:"3 أشهر",name:"MVP / الهاكاثون",status:"active",desc:"بناء النموذج الأولي · 5 اكتشافات · 7 مصادر بيانات · 4 وكلاء"},
+  {when:"6-12 شهرًا",name:"التجريب الميداني",status:"",desc:"تجربة مع 3 مناطق رائدة · ربط حقيقي بـMEWA · أول عقد مع الصندوق"},
+  {when:"12-36 شهرًا",name:"التوسع الوطني",status:"",desc:"تغطية 13 منطقة · نشر API · تصدير النموذج لدول الخليج"}
+];
+
+const FAIR_PRINCIPLES = [
+  {l:"F",w:"Findable",d:"معرفات فريدة + بيانات وصفية غنية + فهرسة مركزية"},
+  {l:"A",w:"Accessible",d:"بروتوكولات قياسية مفتوحة + توثيق واضح للوصول"},
+  {l:"I",w:"Interoperable",d:"مفردات موحّدة + ترميزات قياسية (ISO/INSPIRE)"},
+  {l:"R",w:"Reusable",d:"رخص واضحة + جودة موثّقة + سجل تتبّع كامل"}
+];
+
+const ECVS = [
+  {n:"درجة الحرارة السطحية",v:"NCM · 30 min"},
+  {n:"الأمطار والرطوبة",v:"NCM + Sentinel"},
+  {n:"الغطاء النباتي (NDVI)",v:"Landsat · أسبوعي"},
+  {n:"رطوبة التربة",v:"SMAP · يومي"},
+  {n:"تراكيز ملوثات الهواء",v:"NCEC · ساعي"},
+  {n:"غازات الدفيئة",v:"Sentinel-5P · يومي"}
+];
+
+const GLOBAL_MODELS = [
+  {name:"غرفة الوضع البيئي للأمم المتحدة",org:"UNEP · World Environment Situation Room",
+   desc:"دمج 45+ منصة بيانات بيئية عالمية في واجهة موحّدة لصنّاع القرار. بصيرة تتبنى نفس فلسفة الدمج للسياق الوطني."},
+  {name:"الوكالة الأوروبية للبيئة + شبكة Eionet",org:"EEA · 33 country contact points",
+   desc:"شبكة العقد الوطنية لتدفق بيانات معياري · بصيرة ترسم خارطة مماثلة للجهات السعودية مع DPSIR كإطار جوهري."},
+  {name:"إيكو بانك الكوري",org:"Korea Eco-Bank · Tiered access",
+   desc:"تصنيف المستخدمين (حكومة، باحثون، قطاع خاص، عامة) مع طبقات صلاحيات. بصيرة تتبع نفس النهج لحماية البيانات الحساسة."}
+];
+
+const TECH_STACK = [
+  {layer:"الواجهة",tech:"HTML5 + Leaflet + Chart.js + Vanilla JS",tag:"frontend"},
+  {layer:"الإنتاج",tech:"React 18 + Next.js 14 + TanStack Query",tag:"future"},
+  {layer:"الوكلاء",tech:"CrewAI (Hackathon) → LangGraph (Production)",tag:"AI"},
+  {layer:"النموذج",tech:"Claude API · claude-sonnet-4 · Tool Use",tag:"LLM"},
+  {layer:"البيانات",tech:"PostgreSQL + PostGIS + TimescaleDB",tag:"DB"},
+  {layer:"المحاكاة",tech:"Python + NumPy + SciPy + scikit-learn",tag:"compute"},
+  {layer:"الخدمات",tech:"FastAPI + Redis + Celery + Docker",tag:"backend"},
+  {layer:"الاستضافة",tech:"AWS (eu-central) + CloudFront",tag:"cloud"}
+];
+
+const PROTECT_ITEMS = [
+  {ico:"shield",t:"<b>تشفير من الطرف للطرف</b> لكل الاتصالات والبيانات الحساسة (TLS 1.3 + AES-256)"},
+  {ico:"lock",t:"<b>تحكم وصول مبني على الأدوار</b> (RBAC) مع 4 مستويات صلاحية"},
+  {ico:"eye",t:"<b>سجل تدقيق كامل</b> لكل عملية قراءة أو كتابة على البيانات"},
+  {ico:"flag",t:"<b>الالتزام بنظام حماية البيانات الشخصية</b> السعودي (PDPL) ومعايير NCA"}
+];
+
+const STREAMS = [
+  {num:"01",n:"رسوم خدمة الصندوق",price:"600 ألف ر/سنة",desc:"رسم استخدام سنوي ثابت من صندوق البيئة مقابل ترخيص المنصة الكاملة + تحديثات + دعم فني مستمر"},
+  {num:"02",n:"اشتراكات القطاع الخاص",price:"15-90 ألف ر/سنة",desc:"اشتراكات للشركات الراغبة في الوصول لتقارير الفرص الاستثمارية البيئية والمؤشرات القطاعية"},
+  {num:"03",n:"تقارير استشارية مخصصة",price:"50-300 ألف ر/تقرير",desc:"تقارير عميقة لجهات حكومية وخاصة حول مناطق أو قطاعات معينة بناءً على نظام الوكلاء الذكي"},
+  {num:"04",n:"تدريب وبناء قدرات",price:"25-120 ألف ر/برنامج",desc:"برامج تدريبية للجهات الحكومية على استخدام البيانات البيئية + معايير FAIR + تحليل DPSIR"}
+];
+
+const ROADMAP = [
+  {yr:"السنة 1",n:"الإطلاق + الصندوق",rev:"~1.2 م.ر",items:["عقد رئيسي مع صندوق البيئة","ربط مع 7 مصادر بيانات","نشر MVP في 3 مناطق رائدة","تقريران استشاريان"]},
+  {yr:"السنة 2",n:"التوسع المحلي",rev:"~4.5 م.ر",items:["تغطية 13 منطقة سعودية","12 اشتراك قطاع خاص","8 تقارير استشارية كبرى","3 برامج تدريب وزارية"]},
+  {yr:"السنة 3",n:"التصدير الإقليمي",rev:"~12 م.ر",items:["دخول الإمارات والكويت","عقد مع UNEP الإقليمي","20+ اشتراك قطاع خاص","شراكة مع SABIC للقطاع الزراعي"]}
+];
+
+const CHAT_SUGGESTIONS = [
+  "ما أعلى منطقة سعودية في مخاطر التلوث؟",
+  "اعرض لي مستهدفات رؤية 2030 البيئية",
+  "كيف يعمل وكيل المخاطر البيولوجية؟",
+  "ما مصادر البيانات في بصيرة؟",
+  "اقترح فرصة استثمار بيئية في عسير",
+  "اشرح إطار DPSIR بمثال"
+];
+
+const ICONS = {
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>',
+  map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></svg>',
+  agents:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M7 7l3 3M17 7l-3 3M7 17l3-3M17 17l-3-3"/></svg>',
+  discoveries:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M11 8v6M8 11h6"/></svg>',
+  vision:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>',
+  method:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v4H4zM4 12h16v4H4zM4 20h10"/></svg>',
+  sources:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>',
+  sustain:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg>',
+  team:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 21c0-3.5 2.7-6 6-6s6 2.5 6 6M14 21c.5-2.5 2-4.5 5-4.5s4.5 2 5 4.5"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a8 8 0 0 1-8 8H6l-3 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/></svg>',
+  alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 21h20zM12 9v6M12 18h.01"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v7c0 5-4 8-8 9-4-1-8-4-8-9V6z"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+  flag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 22V4M5 4h13l-3 5 3 5H5"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 4l14 8L5 20z"/></svg>'
+};
+
+const NAV_ITEMS = [
+  {id:"home",num:"01",icon:"home",label:"الرئيسية"},
+  {id:"map",num:"02",icon:"map",label:"الخريطة البيئية"},
+  {id:"agents",num:"03",icon:"agents",label:"نظام الوكلاء"},
+  {id:"discoveries",num:"04",icon:"discoveries",label:"الاكتشافات"},
+  {id:"vision",num:"05",icon:"vision",label:"رؤية 2030"},
+  {id:"method",num:"06",icon:"method",label:"المنهجية"},
+  {id:"sources",num:"07",icon:"sources",label:"مصادر البيانات"},
+  {id:"sustain",num:"08",icon:"sustain",label:"الاستدامة المالية"},
+  {id:"team",num:"09",icon:"team",label:"الفريق وخارطة الطريق"},
+  {id:"chat",num:"10",icon:"chat",label:"المساعد الذكي"}
+];
+
+let state = {
+  view:"home",
+  selectedRegion:"jazan",
+  activeLayer:"biorisk",
+  selectedDiscovery:null,
+  selectedVision:null,
+  agentsRunning:false,
+  feedTimer:null,
+  feedIndex:0,
+  map:null,
+  mapMarkers:[],
+  charts:{}
+};
+
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
+
+function scoreColor(s){
+  if(s===0) return "#6b7d96";
+  if(s<=40) return "#10b981";
+  if(s<=70) return "#fbbf24";
+  return "#ef4444";
+}
+
+function renderNav(){
+  const ul = document.getElementById("navList");
+  ul.innerHTML = NAV_ITEMS.map(n=>`
+    <li class="nav-item ${state.view===n.id?"active":""}" data-id="${n.id}" onclick="switchView('${n.id}')">
+      <span class="nav-icon">${ICONS[n.icon]}</span>
+      <span>${n.label}</span>
+      <span class="nav-num">${n.num}</span>
+    </li>
+  `).join("");
+}
+
+function switchView(id){
+  state.view = id;
+  if(id==="discoveries") state.selectedDiscovery = null;
+  if(id==="vision") state.selectedVision = null;
+  renderNav();
+  renderMain();
+  document.getElementById("main").scrollTop = 0;
+  if(id==="map") setTimeout(initMap, 50);
+}
+
+function renderMain(){
+  const m = document.getElementById("main");
+  let html = "";
+  switch(state.view){
+    case "home": html = renderHome(); break;
+    case "map": html = renderMapView(); break;
+    case "agents": html = renderAgents(); break;
+    case "discoveries": html = state.selectedDiscovery ? renderDiscoveryDetail(state.selectedDiscovery) : renderDiscoveries(); break;
+    case "vision": html = state.selectedVision ? renderVisionDetailHTML(state.selectedVision) : renderVision(); break;
+    case "method": html = renderMethod(); break;
+    case "sources": html = renderSources(); break;
+    case "sustain": html = renderSustain(); break;
+    case "team": html = renderTeam(); break;
+    case "chat": html = renderChat(); break;
+  }
+  m.innerHTML = `<div class="view">${html}</div>`;
+  if(state.view==="vision" && state.selectedVision) setTimeout(()=>renderVisionDetail(state.selectedVision), 50);
+}
+
+function tickClock(){
+  const d = new Date();
+  const h = String(d.getHours()).padStart(2,"0");
+  const m = String(d.getMinutes()).padStart(2,"0");
+  const s = String(d.getSeconds()).padStart(2,"0");
+  const el = document.getElementById("clock");
+  if(el) el.textContent = `${h}:${m}:${s}`;
+}
+
+function init(){
+  renderNav();
+  renderMain();
+  tickClock();
+  setInterval(tickClock, 1000);
+}
+
+window.addEventListener("DOMContentLoaded", init);
+
+
+/* ============================================================
+   VIEW RENDERERS
+   ============================================================ */
+
+function renderHome(){
+  const top = DISCOVERIES[0];
+  return `
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">منصة وطنية لذكاء القرار البيئي</div>
+      <h1>بصيرة <span class="gold">·</span><br/>
+        مساعد القرار التمويلي<br/>الذكي لصندوق <span class="gold">البيئة</span></h1>
+      <p class="lead">منصة متكاملة تساعد صندوق البيئة السعودي على توزيع التمويل بذكاء، تقييم طلبات التمويل وفق معايير علمية، وجذب الاستثمار الخاص — مدعومة بنظام وكلاء ذكي رباعي وقاعدة بيانات وطنية موحّدة وفق معايير FAIR وإطار DPSIR.</p>
+      <div class="hero-cta">
+        <button class="btn primary" onclick="switchView('map')">${ICONS.play} ابدأ الاستكشاف</button>
+        <button class="btn" onclick="switchView('discoveries')">${ICONS.discoveries} 5 اكتشافات جاهزة</button>
+        <button class="btn" onclick="switchView('chat')">${ICONS.chat} اسأل المساعد الذكي</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">7</div><div class="lbl">مصادر بيانات حكومية</div></div>
+        <div class="stat"><div class="num">4</div><div class="lbl">وكلاء ذكاء اصطناعي</div></div>
+        <div class="stat"><div class="num">13</div><div class="lbl">منطقة سعودية</div></div>
+        <div class="stat"><div class="num">5</div><div class="lbl">مستهدفات رؤية 2030</div></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="spotlight-title">▣ اكتشاف اليوم</div>
+      <div class="spotlight-box">
+        <div class="spotlight-region">${top.region}</div>
+        <div style="font-size:13px;color:var(--ink-2);margin-top:6px;line-height:1.65">${top.title}</div>
+        <div class="spotlight-meta">
+          <span>الاستثمار <b>${top.metrics[0].v}</b></span>
+          <span>الوقاية <b>${top.metrics[1].v}</b></span>
+          <span>ROI <b>${top.metrics[2].v}</b></span>
+        </div>
+      </div>
+      <div class="spotlight-bar">
+        <div class="lbl"><span>درجة الإلحاح</span><b>87 / 100</b></div>
+        <div class="track"><div class="fill" style="width:87%"></div></div>
+      </div>
+      <div class="spotlight-actions">
+        <button class="mini-btn" onclick="openDiscovery('${top.id}')">عرض التفاصيل</button>
+        <button class="mini-btn" onclick="switchView('agents')">شغّل التحليل</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="context-strip">
+    <div class="ico">${ICONS.alert}</div>
+    <div class="text">
+      <h4>منصة بُنيت لهاكاثون بيئة ثون 2026 — التحدي الأول</h4>
+      <p>تطوير منظومة موحدة لجمع البيانات البيئية وفق معايير FAIR. بصيرة تتجاوز المنظومة المعلوماتية لتقدم <b style="color:var(--gold-2)">طبقة قرار</b> ذكية تساعد الصندوق على توزيع تمويل أكثر فاعلية ومواءمة مع رؤية 2030.</p>
+    </div>
+    <div class="tag green">جاهز للتحكيم</div>
+  </div>
+
+  <div style="margin-top:34px">
+    <div style="font-size:11px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;margin-bottom:14px">الفريق المؤسس</div>
+    <div class="partners">
+      <div class="partner"><div class="role">مؤسس · CEO</div><div class="name"><b>إبراهيم العبدلي</b> · علوم بيئة</div></div>
+      <div class="partner"><div class="role">قائد تقني</div><div class="name">مهندس برمجيات · <b>AI/GIS</b></div></div>
+      <div class="partner"><div class="role">محلل اقتصادي</div><div class="name">اقتصاد بيئي · <b>ROI · 2030</b></div></div>
+      <div class="partner"><div class="role">حاضنة</div><div class="name">وادي جدة + <b>KAU</b></div></div>
+    </div>
+  </div>
+  `;
+}
+
+function renderMapView(){
+  const region = REGIONS.find(r=>r.id===state.selectedRegion) || REGIONS[0];
+  const layer = LAYERS.find(l=>l.id===state.activeLayer);
+  const score = region.scores[state.activeLayer] ?? 0;
+  return `
+  <div class="view-head">
+    <div class="left">
+      <div class="crumb">02 · المنظومة المكانية</div>
+      <h1>الخريطة البيئية الوطنية</h1>
+      <p class="desc">طبقات بيانات على خريطة المملكة · 12 طبقة قابلة للتبديل · 13 منطقة منشطّة · ربط مباشر بمصادر البيانات الحكومية وفق معايير FAIR.</p>
+    </div>
+    <div class="right">
+      <div class="tag green">12 طبقة نشطة</div>
+      <div class="tag">${REGIONS.length} منطقة</div>
+    </div>
+  </div>
+  <div class="map-shell">
+    <div class="map-wrap">
+      <div id="map"></div>
+      <div class="map-overlay-top">
+        <div class="map-controls" id="layerControls">
+          ${LAYERS.map(l=>`<button class="layer-btn ${l.id===state.activeLayer?"active":""}" onclick="setLayer('${l.id}')">${l.name}</button>`).join("")}
+        </div>
+        <div class="map-legend">
+          <div class="title">${layer.name} (${layer.unit})</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>0–40 · ممتاز</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#fbbf24"></span>41–70 · متوسط</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>71–100 · حرج</div>
+        </div>
+      </div>
+    </div>
+    <div class="map-side">
+      <div class="detail-card">
+        <div class="small">منطقة محددة</div>
+        <h3>${region.name}</h3>
+        <div style="font-size:12px;color:var(--ink-2);margin-top:4px">السكان (مليون): ${region.pop}</div>
+        <div class="detail-stats">
+          <div class="detail-stat"><div class="v" style="color:${scoreColor(score)}">${score}</div><div class="l">${layer.name}</div></div>
+          <div class="detail-stat"><div class="v">${region.scores.invest}</div><div class="l">جاذبية الاستثمار</div></div>
+          <div class="detail-stat"><div class="v">${region.scores.vision}%</div><div class="l">تقدم 2030</div></div>
+          <div class="detail-stat"><div class="v">${region.scores.biorisk}</div><div class="l">المخاطر الحيوية</div></div>
+        </div>
+      </div>
+      <div class="side-card">
+        <h4>المناطق <span class="count">${REGIONS.length}</span></h4>
+        ${REGIONS.map(r=>{
+          const s = r.scores[state.activeLayer] ?? 0;
+          return `<div class="region-item ${r.id===state.selectedRegion?"selected":""}" onclick="selectRegion('${r.id}')">
+            <span class="pin" style="background:${scoreColor(s)}"></span>
+            <span class="name">${r.name}</span>
+            <span class="score">${s}</span>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>
+  </div>
+  `;
+}
+
+function initMap(){
+  if(state.map){ try{ state.map.remove(); }catch(e){} state.map=null; }
+  const el = document.getElementById("map");
+  if(!el) return;
+  state.map = L.map("map", {zoomControl:false, attributionControl:false}).setView([24.0, 45.0], 5);
+  L.control.zoom({position:"topleft"}).addTo(state.map);
+  L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png", {maxZoom:11}).addTo(state.map);
+  drawMarkers();
+}
+
+function drawMarkers(){
+  if(!state.map) return;
+  state.mapMarkers.forEach(m=>state.map.removeLayer(m));
+  state.mapMarkers = [];
+  REGIONS.forEach(r=>{
+    const s = r.scores[state.activeLayer] ?? 0;
+    if(s===0) return;
+    const c = scoreColor(s);
+    const radius = 8 + (s/100)*22;
+    const isSel = r.id===state.selectedRegion;
+    const m = L.circleMarker([r.lat, r.lng], {
+      radius:radius,fillColor:c,color:isSel?"#d4af37":c,
+      weight:isSel?3:1.5,fillOpacity:0.55,opacity:0.95
+    }).addTo(state.map);
+    m.bindTooltip(`<b>${r.name}</b><br/>${LAYERS.find(l=>l.id===state.activeLayer).name}: ${s}`, {direction:"top"});
+    m.on("click", ()=>selectRegion(r.id));
+    state.mapMarkers.push(m);
+  });
+}
+
+function setLayer(id){
+  state.activeLayer = id;
+  renderMain();
+  setTimeout(initMap, 50);
+}
+
+function selectRegion(id){
+  state.selectedRegion = id;
+  if(state.view!=="map"){ switchView("map"); return; }
+  renderMain();
+  setTimeout(()=>{
+    initMap();
+    const r = REGIONS.find(x=>x.id===id);
+    if(state.map && r) state.map.flyTo([r.lat, r.lng], 6, {duration:0.8});
+  }, 50);
+}
+
+function renderAgents(){
+  const cx=50, cy=50, R=34;
+  return `
+  <div class="view-head">
+    <div class="left">
+      <div class="crumb">03 · ذكاء جماعي</div>
+      <h1>نظام الوكلاء الذكي الرباعي</h1>
+      <p class="desc">أربعة وكلاء متخصصون يتعاونون لحل قرارات تمويلية معقّدة. هاكاثون: <b>CrewAI</b> + Claude API · إنتاج: <b>LangGraph</b>. كل وكيل يحمل أدواته وذاكرته وقدراته، ويتواصل مع البقية عبر مدير التنسيق.</p>
+    </div>
+    <div class="right">
+      <div class="tag">${AGENTS.length} وكلاء</div>
+      <div class="tag green">CrewAI · Claude API</div>
+    </div>
+  </div>
+
+  <div class="agents-grid">
+    <div>
+      <div class="agents-stage" id="agentsStage">
+        ${AGENTS.map(a=>{
+          const x = cx + R*Math.cos(a.angle*Math.PI/180);
+          const y = cy + R*Math.sin(a.angle*Math.PI/180);
+          return `<div class="agent-node" id="agent-${a.id}" style="left:calc(${x}% - 65px);top:calc(${y}% - 50px)">
+            <div class="icon-ring">${ICONS.agents}</div>
+            <div class="label">${a.name}</div>
+            <div class="role">${a.role}</div>
+          </div>`;
+        }).join("")}
+        ${AGENTS.map(a=>{
+          const x1=cx, y1=cy;
+          const x2 = cx + R*Math.cos(a.angle*Math.PI/180);
+          const y2 = cy + R*Math.sin(a.angle*Math.PI/180);
+          const dx=x2-x1, dy=y2-y1;
+          const len=Math.sqrt(dx*dx+dy*dy);
+          const ang=Math.atan2(dy,dx)*180/Math.PI;
+          return `<div class="agent-line" id="line-${a.id}" style="left:${x1}%;top:${y1}%;width:${len}%;transform:rotate(${ang}deg)"></div>`;
+        }).join("")}
+        <div class="agent-center">
+          <div class="core"><div class="lbl">بصيرة<small>CORE</small></div></div>
+        </div>
+      </div>
+      <div class="agent-controls">
+        <button class="btn primary" id="agentRunBtn" onclick="toggleAgents()">▶ تشغيل تحليل جازان</button>
+        <button class="btn" onclick="resetAgents()">↺ إعادة</button>
+      </div>
+    </div>
+    <div class="agent-feed">
+      <div class="feed-head">
+        <div class="title">سجل التواصل بين الوكلاء</div>
+        <div class="stat" id="feedStat">0 / ${AGENT_FEED.length}</div>
+      </div>
+      <div class="feed-list" id="feedList"></div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px">
+    ${AGENTS.map(a=>`
+      <div class="section-block" style="margin-bottom:0">
+        <h3 style="color:${a.color};border-color:${a.color}33">${a.name}</h3>
+        <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);margin-bottom:10px">${a.role}</div>
+        <ul>${a.capabilities.map(c=>`<li>${c}</li>`).join("")}</ul>
+      </div>
+    `).join("")}
+  </div>
+  `;
+}
+
+function toggleAgents(){
+  if(state.agentsRunning) stopAgents();
+  else startAgents();
+}
+
+function startAgents(){
+  state.agentsRunning = true;
+  state.feedIndex = 0;
+  document.getElementById("agentRunBtn").textContent = "⏸ إيقاف";
+  document.getElementById("feedList").innerHTML = "";
+  state.feedTimer = setInterval(()=>{
+    if(state.feedIndex >= AGENT_FEED.length){ stopAgents(); return; }
+    const m = AGENT_FEED[state.feedIndex];
+    addFeedMsg(m);
+    document.querySelectorAll(".agent-node.active, .agent-line.active").forEach(el=>el.classList.remove("active"));
+    if(m.who && m.who!=="sys"){
+      const node = document.getElementById("agent-"+m.who);
+      const line = document.getElementById("line-"+m.who);
+      if(node) node.classList.add("active");
+      if(line) line.classList.add("active");
+    }
+    state.feedIndex++;
+    const fs = document.getElementById("feedStat");
+    if(fs) fs.textContent = state.feedIndex+" / "+AGENT_FEED.length;
+  }, 1100);
+}
+
+function stopAgents(){
+  state.agentsRunning = false;
+  clearInterval(state.feedTimer);
+  document.querySelectorAll(".agent-node.active, .agent-line.active").forEach(el=>el.classList.remove("active"));
+  const btn = document.getElementById("agentRunBtn");
+  if(btn) btn.textContent = "▶ تشغيل تحليل جازان";
+}
+
+function resetAgents(){
+  stopAgents();
+  state.feedIndex = 0;
+  const fl = document.getElementById("feedList");
+  if(fl) fl.innerHTML = "";
+  const fs = document.getElementById("feedStat");
+  if(fs) fs.textContent = "0 / "+AGENT_FEED.length;
+}
+
+function addFeedMsg(m){
+  const fl = document.getElementById("feedList");
+  if(!fl) return;
+  const whoMap = {data:"وكيل البيانات",gis:"وكيل GIS",bio:"وكيل المخاطر",eco:"وكيل الاقتصاد",sys:"النظام"};
+  const div = document.createElement("div");
+  div.className = "feed-msg";
+  div.innerHTML = `<span class="ts">${m.t}</span><span class="who ${m.who}">${whoMap[m.who]}</span><span class="body">${m.b}</span>`;
+  fl.appendChild(div);
+  fl.scrollTop = fl.scrollHeight;
+}
+
+function renderDiscoveries(){
+  return `
+  <div class="view-head">
+    <div class="left">
+      <div class="crumb">04 · أرشيف الذكاء</div>
+      <h1>الاكتشافات الخمسة الجاهزة</h1>
+      <p class="desc">خمس فرص قرار تمويلي اكتشفها نظام الوكلاء عبر تحليل بيانات 13 منطقة. كل اكتشاف موثق وفق إطار <b>DPSIR</b> مع تقدير ROI ومستهدف رؤية 2030 المرتبط.</p>
+    </div>
+    <div class="right">
+      <div class="tag">5 اكتشافات</div>
+      <div class="tag green">جاهز للعرض</div>
+    </div>
+  </div>
+  <div class="discoveries-grid">
+    ${DISCOVERIES.map(d=>`
+      <div class="disc-card" onclick="openDiscovery('${d.id}')">
+        <div class="disc-num">اكتشاف ${d.num}</div>
+        <div class="disc-region">${d.region}</div>
+        <div class="disc-tag ${d.urgencyClass}">${d.urgency}</div>
+        <div style="font-size:14px;color:var(--ink);font-weight:600;margin-bottom:8px;line-height:1.5">${d.title}</div>
+        <div class="disc-summary">${d.summary}</div>
+        <div class="disc-metrics">
+          ${d.metrics.map(m=>`<div class="disc-metric"><div class="v ${m.g?"green":""}">${m.v}</div><div class="l">${m.l}</div></div>`).join("")}
+        </div>
+      </div>
+    `).join("")}
+  </div>
+  `;
+}
+
+function openDiscovery(id){
+  state.selectedDiscovery = id;
+  if(state.view !== "discoveries") state.view = "discoveries";
+  renderNav();
+  renderMain();
+  document.getElementById("main").scrollTop = 0;
+}
+
+function closeDiscovery(){
+  state.selectedDiscovery = null;
+  renderMain();
+}
+
+function renderDiscoveryDetail(id){
+  const d = DISCOVERIES.find(x=>x.id===id);
+  if(!d) return renderDiscoveries();
+  return `
+  <div class="view-head">
+    <div class="left">
+      <div class="crumb">04 · اكتشاف ${d.num}</div>
+      <h1>${d.region} · ${d.title}</h1>
+      <p class="desc">${d.summary}</p>
+    </div>
+    <div class="right">
+      <div class="tag ${d.urgencyClass}">${d.urgency}</div>
+    </div>
+  </div>
+  <button class="detail-back" onclick="closeDiscovery()">↜ عودة للأرشيف</button>
+
+  <div class="dpsir-track">
+    <div class="small">▣ تحليل DPSIR — Driver / Pressure / State / Impact / Response</div>
+    <div class="dpsir-flow">
+      <div class="dpsir-step"><div class="k">D · المحرك</div><div class="v">${d.dpsir.d}</div></div>
+      <div class="dpsir-step"><div class="k">P · الضغط</div><div class="v">${d.dpsir.p}</div></div>
+      <div class="dpsir-step"><div class="k">S · الحالة</div><div class="v">${d.dpsir.s}</div></div>
+      <div class="dpsir-step"><div class="k">I · الأثر</div><div class="v">${d.dpsir.i}</div></div>
+      <div class="dpsir-step"><div class="k">R · الاستجابة</div><div class="v">${d.dpsir.r}</div></div>
+    </div>
+  </div>
+
+  <div class="detail-grid" style="margin-top:18px">
+    <div>
+      <div class="section-block">
+        <h3>الأدلة والمؤشرات</h3>
+        <ul>${d.evidence.map(e=>`<li>${e}</li>`).join("")}</ul>
+      </div>
+      <div class="section-block">
+        <h3>الإجراءات الموصى بها</h3>
+        <ul>${d.action.map(a=>`<li>${a}</li>`).join("")}</ul>
+      </div>
+    </div>
+    <div>
+      <div class="section-block">
+        <h3>مؤشرات التمويل</h3>
+        <div class="detail-stats" style="grid-template-columns:1fr">
+          ${d.metrics.map(m=>`<div class="detail-stat"><div class="v" style="color:${m.g?"var(--green-2)":"var(--gold-2)"}">${m.v}</div><div class="l">${m.l}</div></div>`).join("")}
+        </div>
+      </div>
+      <div class="section-block">
+        <h3>القرار المقترح</h3>
+        <p style="color:var(--ink);font-size:14px">يوصى بإدراج هذا الاكتشاف ضمن <b style="color:var(--gold-2)">قائمة التمويل ذات الأولوية القصوى</b> للربع القادم، مع تخصيص فريق تنفيذي وميزانية محدّدة وفق الإجراءات أعلاه.</p>
+        <button class="btn primary" style="margin-top:14px;width:100%;justify-content:center" onclick="switchView('agents')">${ICONS.play} شغّل التحليل في الوكلاء</button>
+      </div>
+    </div>
+  </div>
+  `;
+}
+
+function renderVision(){
+  return `
+  <div class="view-head">
+    <div class="left">
+      <div class="crumb">05 · المواءمة الاستراتيجية</div>
+      <h1>مستهدفات رؤية 2030 البيئية</h1>
+      <p class="desc">خمسة مستهدفات بيئية محورية في رؤية المملكة 2030. بصيرة تتتبع التقدم اللحظي، تحدد الفجوات، وتقترح توزيعًا تمويليًا موجّهًا نحو إغلاقها.</p>
+    </div>
+    <div class="right">
+      <div class="tag">5 مستهدفات</div>
+      <div class="tag green">تحديث يومي</div>
+    </div>
+  </div>
+
+  <div class="vision-summary">
+    ${VISION.map(v=>`
+      <div class="vis-card" onclick="openVision('${v.id}')">
+        <div class="target-name">${v.name}</div>
+        <div class="nums">
+          <span class="now">${v.current}<span style="font-size:11px;color:var(--ink-3)"> ${v.unit}</span></span>
+          <span class="arrow">←</span>
+          <span class="target">${v.target} ${v.unit}</span>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:${v.progress}%;background:linear-gradient(90deg, ${v.color}aa, ${v.color})"></div></div>
+        <div class="gap"><b>الفجوة</b> ${v.gapPercent}% للوصول</div>
+      </div>
+    `).join("")}
+  </div>
+
+  <div class="section-block">
+    <h3>المنهج العام لتقدير التمويل</h3>
+    <p>يستخدم وكيل الاقتصاد <b style="color:var(--gold-2)">نموذج توزيع متعدد المعايير</b> يأخذ بعين الاعتبار: حجم الفجوة، التكلفة الحدية للتغيير، احتمالية النجاح، الأثر الاجتماعي، والتشابك مع مستهدفات أخرى. النتيجة توصية تمويلية مرتّبة حسب أعلى قيمة بيئية لكل ريال مستثمر (Environmental Value per SAR).</p>
+  </div>
+  `;
+}
+
+function openVision(id){
+  state.selectedVision = id;
+  if(state.view !== "vision") state.view = "vision";
+  renderNav();
+  renderMain();
+  document.getElementById("main").scrollTop = 0;
+  setTimeout(()=>renderVisionDetail(id), 60);
+}
+
+function closeVision(){
+  state.selectedVision = null;
+  renderMain();
+}
+
+function renderVisionDetailHTML(id){
+  const v = VISION.find(x=>x.id===id);
+  if(!v) return renderVision();
+  return `
+  <div class="view-head">
+    <div class="left">
+      <div class="crumb">05 · ${v.name}</div>
+      <h1>${v.name}</h1>
+      <p class="desc">${v.desc}</p>
+    </div>
+    <div class="right">
+      <div class="tag" style="background:${v.color}22;border-color:${v.color}66;color:${v.color}">الحالي ${v.current} ${v.unit}</div>
+      <div class="tag green">مستهدف ${v.target} ${v.unit}</div>
+    </div>
+  </div>
+  <button class="detail-back" onclick="closeVision()">↜ عودة للمستهدفات</button>
+
+  <div class="vis-detail-grid three">
+    <div class="chart-box">
+      <h4>المسار الزمني نحو 2030</h4>
+      <div class="canvas-wrap"><canvas id="visTrend"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <h4>التقدم الحالي</h4>
+      <div class="canvas-wrap"><canvas id="visGauge"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <h4>أعلى المناطق إسهامًا</h4>
+      <div class="canvas-wrap"><canvas id="visRegions"></canvas></div>
+    </div>
+  </div>
+
+  <div class="vis-detail-grid" style="margin-top:18px">
+    <div class="section-block" style="margin:0">
+      <h3>التحديات الرئيسية</h3>
+      <p>الفجوة الحالية تبلغ <b style="color:#fbbf24">${v.gapPercent}%</b> ما يعني الحاجة لمضاعفة معدلات التنفيذ في السنوات المتبقية. أبرز التحديات: قيود التمويل، تشتت بيانات القياس بين الجهات، ضعف القياس الميداني المنتظم، وغياب توحيد المؤشرات.</p>
+    </div>
+    <div class="section-block" style="margin:0">
+      <h3>التوصيات التمويلية</h3>
+      <ul>${v.investments.map(i=>`<li>${i}</li>`).join("")}</ul>
+    </div>
+  </div>
+  `;
+}
+
+function renderVisionDetail(id){
+  const v = VISION.find(x=>x.id===id);
+  if(!v) return;
+  const t = document.getElementById("visTrend");
+  if(t){
+    if(state.charts.trend) state.charts.trend.destroy();
+    state.charts.trend = new Chart(t, {
+      type:"line",
+      data:{labels:v.trendYears,datasets:[
+        {label:v.name,data:v.trend,borderColor:v.color,backgroundColor:v.color+"33",fill:true,tension:0.35,pointRadius:3,pointBackgroundColor:v.color,borderWidth:2.5},
+        {label:"المستهدف",data:Array(v.trendYears.length).fill(v.target),borderColor:"#d4af37",borderDash:[6,4],pointRadius:0,fill:false,borderWidth:1.5}
+      ]},
+      options:chartOpts({yMax:v.target*1.1})
+    });
+  }
+  const g = document.getElementById("visGauge");
+  if(g){
+    if(state.charts.gauge) state.charts.gauge.destroy();
+    state.charts.gauge = new Chart(g, {
+      type:"doughnut",
+      data:{datasets:[{data:[v.progress, 100-v.progress],backgroundColor:[v.color,"rgba(255,255,255,.06)"],borderWidth:0,circumference:270,rotation:225}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:"75%",plugins:{legend:{display:false},tooltip:{enabled:false}}},
+      plugins:[{
+        id:"text",
+        beforeDraw(c){
+          const {ctx,chartArea}=c;
+          ctx.save();
+          ctx.fillStyle="#e8eef7";
+          ctx.font="700 26px Tajawal";
+          ctx.textAlign="center";
+          ctx.fillText(v.progress.toFixed(1)+"%",(chartArea.left+chartArea.right)/2,(chartArea.top+chartArea.bottom)/2+4);
+          ctx.font="400 11px Tajawal";
+          ctx.fillStyle="#a8b8cc";
+          ctx.fillText("من المستهدف",(chartArea.left+chartArea.right)/2,(chartArea.top+chartArea.bottom)/2+24);
+          ctx.restore();
+        }
+      }]
+    });
+  }
+  const r = document.getElementById("visRegions");
+  if(r){
+    if(state.charts.regions) state.charts.regions.destroy();
+    state.charts.regions = new Chart(r, {
+      type:"bar",
+      data:{labels:v.regions.map(x=>x.n),datasets:[{data:v.regions.map(x=>x.p),backgroundColor:v.color+"aa",borderColor:v.color,borderWidth:1.5,borderRadius:6}]},
+      options:chartOpts({legend:false,indexAxis:"y",yMax:100})
+    });
+  }
+}
+
+function chartOpts(opts={}){
+  return {
+    responsive:true,maintainAspectRatio:false,
+    indexAxis:opts.indexAxis||"x",
+    plugins:{
+      legend:{display:opts.legend!==false,labels:{color:"#a8b8cc",font:{family:"Tajawal",size:11}}},
+      tooltip:{backgroundColor:"#0f2847",borderColor:"#d4af37",borderWidth:1,titleColor:"#d4af37",bodyColor:"#e8eef7",padding:10,titleFont:{family:"Tajawal",weight:"700"},bodyFont:{family:"Tajawal"}}
+    },
+    scales:{
+      x:{ticks:{color:"#6b7d96",font:{family:"JetBrains Mono",size:10}},grid:{color:"rgba(255,255,255,.04)"}},
+      y:{max:opts.yMax,ticks:{color:"#6b7d96",font:{family:"JetBrains Mono",size:10}},grid:{color:"rgba(255,255,255,.04)"}}
+    }
+  };
+}
+
+function renderMethod(){
+  return `
+  <div class="view-head">
+    <div class="left">
+      <div class="crumb">06 · الأسس العلمية</div>
+      <h1>المنهجية المعتمدة</h1>
+      <p class="desc">بصيرة لا تستند للحدس. كل قرار مبني على إطار علمي محكّم: <b>FAIR</b> لجودة البيانات، <b>DPSIR</b> لربط الأسباب بالنتائج، <b>المتغيرات الأساسية</b> للقياس، ومحاكاة <b>Monte Carlo</b> للقرار تحت عدم اليقين.</p>
+    </div>
+    <div class="right">
+      <div class="tag green">معايير دولية</div>
+      <div class="tag">PDPL · NCA</div>
+    </div>
+  </div>
+
+  <div class="method-grid">
+    <div class="method-block">
+      <div class="num">01 — المعايير</div>
+      <h3>مبادئ FAIR لجودة البيانات</h3>
+      <div class="ref">Wilkinson et al., Scientific Data, 2016</div>
+      <p>أربعة مبادئ موجِّهة لكل بيانات تدخل بصيرة. البيانات يجب أن تكون قابلة للإيجاد، الوصول، التشغيل المتبادل، وإعادة الاستخدام.</p>
+      <div class="fair-grid">
+        ${FAIR_PRINCIPLES.map(p=>`<div class="fair-item"><div class="letter">${p.l}</div><div class="word">${p.w}</div><div class="desc">${p.d}</div></div>`).join("")}
+      </div>
+    </div>
+
+    <div class="method-block">
+      <div class="num">02 — الإطار التحليلي</div>
+      <h3>إطار DPSIR للسببية البيئية</h3>
+      <div class="ref">EEA — European Environment Agency, 1995</div>
+      <p>إطار تسلسلي يربط القوى المحرّكة بالاستجابات السياسية، ويُستخدم في كل اكتشاف لضمان وضوح سلسلة السببية وقابلية التتبّع.</p>
+      <div class="dpsir-visual">
+        <div class="dpsir-bubble"><div class="l">D</div><div class="a">المحرّك</div><div class="e">Driver</div></div>
+        <span class="dpsir-arrow">←</span>
+        <div class="dpsir-bubble"><div class="l">P</div><div class="a">الضغط</div><div class="e">Pressure</div></div>
+        <span class="dpsir-arrow">←</span>
+        <div class="dpsir-bubble"><div class="l">S</div><div class="a">الحالة</div><div class="e">State</div></div>
+        <span class="dpsir-arrow">←</span>
+        <div class="dpsir-bubble"><div class="l">I</div><div class="a">الأثر</div><div class="e">Impact</div></div>
+        <span class="dpsir-arrow">←</span>
+        <div class="dpsir-bubble"><div class="l">R</div><div class="a">الاستجابة</div><div class="e">Response</div></div>
+      </div>
+    </div>
+
+    <div class="method-block">
+      <div class="num">03 — المتغيرات</div>
+      <h3>المتغيرات البيئية الأساسية</h3>
+      <div class="ref">GCOS · Essential Climate Variables · مواءمة سعودية</div>
+      <p>ستة متغيرات أساسية تُقاس بانتظام عبر مصادر متعددة. هذه هي المؤشرات التي تنبني عليها كل التحليلات اللاحقة.</p>
+      <div class="ecv-list">
+        ${ECVS.map(e=>`<div class="ecv-chip"><div class="label">${e.n}</div><div class="val">${e.v}</div></div>`).join("")}
+      </div>
+    </div>
+
+    <div class="method-block">
+      <div class="num">04 — المراجع العالمية</div>
+      <h3>نماذج عالمية مرجعية</h3>
+      <div class="ref">UNEP · EEA · Korea Eco-Bank</div>
+      <p>بصيرة استلهمت تصميمها من ثلاث منصات عالمية رائدة، مع تكييفها للسياق السعودي:</p>
+      <div class="global-models">
+        ${GLOBAL_MODELS.map(m=>`<div class="gmodel"><div class="name">${m.name}</div><div class="org">${m.org}</div><div class="desc">${m.desc}</div></div>`).join("")}
+      </div>
+    </div>
+
+    <div class="method-block">
+      <div class="num">05 — البنية التقنية</div>
+      <h3>طبقات التقنية المعتمدة</h3>
+      <div class="ref">من MVP إلى Production-grade</div>
+      <p>اختيارات تقنية مبنية على نضج الأدوات وقابلية التوسع، مع مسار واضح من الهاكاثون إلى الإنتاج الفعلي.</p>
+      <div class="tech-stack-list">
+        ${TECH_STACK.map(t=>`<div class="tech-row"><span class="layer">${t.layer}</span><span class="tech">${t.tech}</span><span class="tag">${t.tag}</span></div>`).join("")}
+      </div>
+    </div>
+
+    <div class="method-block">
+      <div class="num">06 — الحماية</div>
+      <h3>حماية البيانات والأمن</h3>
+      <div class="ref">SDAIA · NCA · PDPL</div>
+      <p>بصيرة تتعامل مع بيانات حكومية حساسة. الحماية مدمجة في التصميم منذ اليوم الأول (Privacy by Design).</p>
+      <div class="protect-list">
+        ${PROTECT_ITEMS.map(p=>`<div class="protect-item"><div class="ico">${ICONS[p.ico]}</div><div class="text">${p.t}</div></div>`).join("")}
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" style="margin-top:18px;border-color:rgba(212,175,55,.3)">
+    <h3>محاكاة Monte Carlo · موديول EPLO المدمج</h3>
+    <p>وكيل المخاطر البيولوجية يستخدم نموذج <b>de Vos & Elbers (2024)</b> لإنفلونزا الطيور عالية الإمراضية، معدّلاً للمناخ الحار الجاف الخليجي. كل تشغيل = 10,000 محاكاة عشوائية بتوزيعات احتمالية على 14 متغيرًا (الكثافة، الرطوبة، الحرارة، تاريخ الهجرة، إلخ). النتيجة: توزيع احتمالي لاحتمال التفشي يتيح اتخاذ قرار تمويلي تحت عدم يقين كمي معروف.</p>
+    <p style="color:var(--gold-2);font-weight:600">هذا الموديول يمثل الميزة العلمية والتجارية لـ EPLO، وهو متكامل في بصيرة كأحد أربعة وكلاء.</p>
+  </div>
+  `;
+}
+
+function renderSources(){
+  return `
+  <div class="view-head">
+    <div class="left">
+      <div class="crumb">07 · البنية التحتية للبيانات</div>
+      <h1>سبعة مصادر بيانات وطنية</h1>
+      <p class="desc">منصة بصيرة موصولة مباشرة بسبع جهات حكومية وبحثية رئيسية. كل مصدر يخضع لبروتوكول توحيد وفق FAIR وكل سجل يحمل سلسلة تتبع كاملة (lineage).</p>
+    </div>
+    <div class="right">
+      <div class="tag green">7 / 7 متصل</div>
+      <div class="tag">FAIR · ISO</div>
+    </div>
+  </div>
+
+  <div class="sources-list">
+    ${SOURCES.map(s=>`
+      <div class="source-row">
+        <div class="num">${s.n}</div>
+        <div class="info">
+          <div class="name">${s.name}</div>
+          <div class="name-en">${s.en}</div>
+          <div class="desc">${s.desc}</div>
+        </div>
+        <div class="vol">
+          <div class="v">${s.vol}</div>
+          <div class="l">حجم البيانات</div>
+        </div>
+        <div class="status ${s.status}">
+          <span class="dot"></span>
+          ${s.status==="connected" ? "متصل · لحظي" : "متصل جزئيًا"}
+        </div>
+      </div>
+    `).join("")}
+  </div>
+
+  <div class="section-block" style="margin-top:24px">
+    <h3>تدفق البيانات والتوحيد</h3>
+    <p>البيانات الواردة من الجهات السبعة تمر عبر طبقة <b style="color:var(--gold-2)">ETL ذكية</b> يديرها وكيل البيانات. كل سجل يُنظف، يُوحَّد، يُربط بكيان جغرافي (geocoding)، ويُختم بطابع زمني وسلسلة ترميز. ثم يُحفظ في قاعدة بيانات موزعة (PostgreSQL + PostGIS + TimescaleDB) قابلة للاستعلام الزماني-المكاني.</p>
+    <p>التحديثات: لحظية (real-time) للأرصاد، ساعية (NCEC)، يومية (Sentinel + MEWA)، أسبوعية (Landsat). كل بيانات تخضع لتحقق آلي + فحص شذوذ (anomaly detection) قبل الإدماج.</p>
+  </div>
+  `;
+}
+
+function renderSustain(){
+  return `
+  <div class="view-head">
+    <div class="left">
+      <div class="crumb">08 · النموذج المالي</div>
+      <h1>نموذج الاستدامة المالية</h1>
+      <p class="desc">بصيرة لا تعتمد على التمويل المؤقت. أربعة مصادر دخل تكاملية تضمن استدامة المنصة بعد انتهاء الهاكاثون، مع خارطة نمو إيرادات لثلاث سنوات.</p>
+    </div>
+    <div class="right">
+      <div class="tag green">4 مصادر دخل</div>
+      <div class="tag">3 سنوات نمو</div>
+    </div>
+  </div>
+
+  <div class="sus-streams">
+    ${STREAMS.map(s=>`
+      <div class="stream-card">
+        <div class="num">مصدر ${s.num}</div>
+        <h3>${s.n}</h3>
+        <div class="price">${s.price}</div>
+        <p>${s.desc}</p>
+      </div>
+    `).join("")}
+  </div>
+
+  <div class="roadmap">
+    <h3>خارطة نمو الإيرادات · ثلاث سنوات</h3>
+    <div class="roadmap-grid">
+      ${ROADMAP.map(r=>`
+        <div class="roadmap-stage">
+          <div class="yr">${r.yr}</div>
+          <h4>${r.n}</h4>
+          <div class="rev">${r.rev}</div>
+          <ul>${r.items.map(i=>`<li>${i}</li>`).join("")}</ul>
+        </div>
+      `).join("")}
+    </div>
+  </div>
+
+  <div class="section-block" style="margin-top:24px">
+    <h3>أرقام الجدوى الإجمالية</h3>
+    <div class="hero-stats">
+      <div class="stat"><div class="num">~17.7 م.ر</div><div class="lbl">إيرادات تراكمية 3 سنوات</div></div>
+      <div class="stat"><div class="num">2.8 م.ر</div><div class="lbl">تكلفة تشغيل سنوية</div></div>
+      <div class="stat"><div class="num">14 شهرًا</div><div class="lbl">نقطة التعادل</div></div>
+      <div class="stat"><div class="num">62%</div><div class="lbl">هامش ربح متوقع (سنة 3)</div></div>
+    </div>
+  </div>
+  `;
+}
+
+function renderTeam(){
+  return `
+  <div class="view-head">
+    <div class="left">
+      <div class="crumb">09 · الفريق المؤسس</div>
+      <h1>الفريق وخارطة الطريق</h1>
+      <p class="desc">فريق متعدد التخصصات يجمع علوم البيئة والميكروبيولوجيا، هندسة الذكاء الاصطناعي، والاقتصاد البيئي. ثلاث مراحل واضحة من النموذج الأولي إلى التوسع الإقليمي.</p>
+    </div>
+    <div class="right">
+      <div class="tag">3 مؤسسين</div>
+      <div class="tag green">3 مراحل</div>
+    </div>
+  </div>
+
+  <div class="team-grid">
+    ${TEAM.map(m=>`
+      <div class="member-card">
+        <div class="member-avatar">${m.av}</div>
+        <div class="name">${m.name}</div>
+        <div class="role">${m.role}</div>
+        <div class="bio">${m.bio}</div>
+        <div class="badges">${m.badges.map(b=>`<span class="badge">${b}</span>`).join("")}</div>
+      </div>
+    `).join("")}
+  </div>
+
+  <div class="phases">
+    <h3>خارطة الطريق · من الهاكاثون إلى التصدير الإقليمي</h3>
+    <p class="lead">ثلاث مراحل تطوير متتابعة، كل مرحلة مرتبطة بمعالم محددة وعقود فعلية مع جهات عميل.</p>
+    <div class="phase-track">
+      ${PHASES.map((p,i)=>`
+        <div class="phase-step ${p.status}">
+          <div class="marker">${String(i+1).padStart(2,"0")}</div>
+          <div class="when">${p.when}</div>
+          <div class="nm">${p.name}</div>
+          <div class="ds">${p.desc}</div>
+        </div>
+      `).join("")}
+    </div>
+  </div>
+
+  <div class="section-block" style="margin-top:24px">
+    <h3>لماذا هذا الفريق؟</h3>
+    <p>المؤسس <b style="color:var(--gold-2)">إبراهيم العبدلي</b> يجمع خبرة ميدانية نادرة: طالب دكتوراه علوم بيئة في جامعة الملك عبدالعزيز، خلفية ميكروبيولوجيا، مدرّس ثانوي يتعامل مع جيل المستقبل، ومؤسس EPLO الذي يقدم النواة العلمية لموديول المخاطر البيولوجية في بصيرة. هذا التركيب من الأكاديمية + التعليم + ريادة الأعمال = منصة لا يمكن لمنافس استنساخها بسهولة.</p>
+  </div>
+  `;
+}
+
+function renderChat(){
+  return `
+  <div class="view-head">
+    <div class="left">
+      <div class="crumb">10 · المساعد التفاعلي</div>
+      <h1>المساعد الذكي</h1>
+      <p class="desc">واجهة محادثة عربية مدعومة بنظام الوكلاء الرباعي. اسأل عن أي منطقة، مستهدف 2030، اكتشاف، أو فرصة استثمار — وستحصل على إجابة موثّقة من بيانات المنصة.</p>
+    </div>
+    <div class="right">
+      <div class="tag green">عربي · لحظي</div>
+    </div>
+  </div>
+  <div class="chat-shell">
+    <div class="chat-head">
+      <div class="left">
+        <div class="ai-avatar">ب</div>
+        <div>
+          <div class="ttl">بصيرة · المساعد الذكي</div>
+          <div class="sub">متصل · 4 وكلاء جاهزون</div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="chat-msg ai">
+        <div class="av">ب</div>
+        <div class="txt">السلام عليكم، أنا <b>بصيرة</b>، مساعدك الذكي في صندوق البيئة السعودي. يمكنني الإجابة عن أسئلتك حول 13 منطقة سعودية، 5 مستهدفات لرؤية 2030، و7 مصادر بيانات حكومية. كيف يمكنني مساعدتك؟</div>
+      </div>
+    </div>
+    <div class="chat-suggestions" id="chatSugg">
+      ${CHAT_SUGGESTIONS.map(s=>`<div class="suggest-chip" onclick="sendChat('${s.replace(/'/g,"\\'")}')">${s}</div>`).join("")}
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chatInput" placeholder="اكتب سؤالك هنا..." onkeydown="if(event.key==='Enter') sendChat()" />
+      <button class="chat-send" onclick="sendChat()">إرسال ${ICONS.send}</button>
+    </div>
+  </div>
+  `;
+}
+
+function sendChat(presetText){
+  const inp = document.getElementById("chatInput");
+  const text = (presetText || (inp ? inp.value.trim() : "")).trim();
+  if(!text) return;
+  if(inp) inp.value = "";
+  const msgs = document.getElementById("chatMsgs");
+  const um = document.createElement("div");
+  um.className = "chat-msg user";
+  um.innerHTML = `<div class="av">أنت</div><div class="txt">${escapeHtml(text)}</div>`;
+  msgs.appendChild(um);
+  msgs.scrollTop = msgs.scrollHeight;
+  const t = document.createElement("div");
+  t.className = "chat-msg ai";
+  t.innerHTML = `<div class="av">ب</div><div class="txt"><i style="opacity:.7">يحلل الوكلاء الأربعة...</i></div>`;
+  msgs.appendChild(t);
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(()=>{
+    t.querySelector(".txt").innerHTML = generateChatResponse(text);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1000 + Math.random()*600);
+}
+
+function generateChatResponse(q){
+  if(/جازان/i.test(q)){
+    return `<b>جازان · ملف منطقة</b><br/>السكان: 1.6 م · مؤشر QMRA: <code>88</code> (الأعلى وطنيًا) · تقدم 2030: 55%.<br/>هذه المنطقة تستضيف أحد أهم اكتشافاتنا: <a onclick="openDiscovery('jazan')">نقطة ساخنة وبائية في الدواجن</a>. الاستثمار المقترح <b style="color:var(--green-2)">12 م.ر</b> مقابل تجنب خسائر <b style="color:var(--green-2)">180 م.ر</b> (ROI 1,400%).`;
+  }
+  if(/2030|رؤية|مستهدف/i.test(q)){
+    return `<b>مستهدفات رؤية 2030 البيئية</b><br/>5 مستهدفات نتتبعها: المحميات (17.2%→30%)، تحويل النفايات (38.5%→94%)، الطاقة المتجددة (4.2%→50%)، زراعة الأشجار (159م→600م)، خفض الانبعاثات (85→278 م.طن).<br/>أكبر فجوة حاليًا في <b style="color:#fbbf24">زراعة الأشجار (73.5%)</b>. <a onclick="switchView('vision')">عرض اللوحة الكاملة ←</a>`;
+  }
+  if(/وكيل|وكلاء|agent/i.test(q)){
+    return `<b>نظام الوكلاء الرباعي</b><br/>أربعة وكلاء متخصصون: <code>وكيل البيانات</code> (FAIR + 7 مصادر) · <code>وكيل GIS</code> (تحليل مكاني) · <code>وكيل المخاطر البيولوجية</code> (محاكاة Monte Carlo / EPLO) · <code>وكيل الاقتصاد</code> (ROI + 2030).<br/>التشغيل: CrewAI (هاكاثون) → LangGraph (إنتاج). <a onclick="switchView('agents')">شغّل عرضًا حيًا ←</a>`;
+  }
+  if(/مصادر|مصدر|بيانات/i.test(q)){
+    return `<b>7 مصادر بيانات حكومية</b><br/>NCM (الأرصاد) · MEWA (البيئة) · NCEC (الرقابة) · MWAN (النفايات) · SWCC (التحلية) · Sentinel/Landsat (أقمار) · KFMRC (مرجعية طبية).<br/>الإجمالي: ~3.7 مليون سجل شهريًا، موحَّد وفق FAIR. <a onclick="switchView('sources')">القائمة الكاملة ←</a>`;
+  }
+  if(/عسير/i.test(q)){
+    return `<b>عسير · فرصة استثمارية</b><br/>BDI=88 (أعلى تنوع حيوي وطنيًا) · 37 نوعًا متوطنًا · سوق سياحة بيئية متوقع <b style="color:var(--green-2)">70 م.ر/سنة</b>.<br/>الاستثمار المقترح <b>45 م.ر</b> في بنية سياحية ذكية (ممرات بيئية + حجز رقمي + تدريب 400 مرشد) — استرداد خلال 4 سنوات. <a onclick="openDiscovery('asir')">عرض الاكتشاف ←</a>`;
+  }
+  if(/dpsir|الإطار/i.test(q)){
+    return `<b>إطار DPSIR بمثال (جازان)</b><br/><b>D · Driver:</b> توسع مزارع الدواجن دون بنية بيئية كافية.<br/><b>P · Pressure:</b> أمونيا عالية + كثافة طيور + هجرة موسمية.<br/><b>S · State:</b> تلوث جوي محلي + ضعف مناعي للقطعان.<br/><b>I · Impact:</b> خسائر 180 م.ر متوقعة + تهديد أمن غذائي.<br/><b>R · Response:</b> 50 مستشعر IoT + ربط EPLO + 12 م.ر تمويل. <a onclick="switchView('method')">المنهجية الكاملة ←</a>`;
+  }
+  if(/تلوث|أعلى|خطر|بيولوج/i.test(q)){
+    const sorted = REGIONS.slice().sort((a,b)=>b.scores.biorisk - a.scores.biorisk).slice(0,3);
+    return `<b>أعلى المناطق في المخاطر البيولوجية</b><br/>${sorted.map((r,i)=>`${i+1}. <b>${r.name}</b> · QMRA = <code>${r.scores.biorisk}</code>`).join("<br/>")}<br/>المرتبة الأولى لجازان مرتبطة باكتشاف رقم 01. <a onclick="switchView('map')">عرض الخريطة ←</a>`;
+  }
+  if(/استثمار|تمويل|روي|roi/i.test(q)){
+    return `<b>أفضل ثلاث فرص حسب ROI</b><br/>1. <b>جازان</b> · مزارع الدواجن · ROI <code style="color:var(--green-2)">1,400%</code><br/>2. <b>الرياض</b> · توحيد بيانات الانبعاثات · ROI <code style="color:var(--green-2)">733%</code><br/>3. <b>الجوف</b> · حماية المياه الجوفية · ROI <code style="color:var(--green-2)">309%</code><br/><a onclick="switchView('discoveries')">كل الاكتشافات ←</a>`;
+  }
+  return `استلمت سؤالك. يمكنني المساعدة في: <b>المناطق</b> (جازان · الرياض · القصيم...)، <b>مستهدفات 2030</b>، <b>الوكلاء الذكيين</b>، <b>مصادر البيانات</b>، أو <b>الفرص الاستثمارية</b>. جرّب أحد الاقتراحات أعلاه أو اسأل عن منطقة محددة.`;
+}
+</script>
+</body>
+</html>
